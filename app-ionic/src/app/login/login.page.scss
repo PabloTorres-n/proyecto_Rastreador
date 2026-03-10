@@ -1,0 +1,116 @@
+:host {
+  --ion-background-color: #f4f7f9 !important;
+  --ion-text-color: #000000 !important;
+  --ion-item-background: #ffffff !important;
+  --ion-color-step-50: #f4f7f9 !important;
+  --ion-color-step-100: #eef2f5 !important;
+  display: block;
+  height: 100%;
+}
+
+.light-mode-only {
+  --background: #f4f7f9 !important;
+  background: #f4f7f9 !important;
+  &::part(background) { background: #f4f7f9 !important; }
+}
+
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around; // Distribuye logo arriba y form en medio
+  min-height: 100vh;
+  width: 100%;
+  padding: calc(env(safe-area-inset-top) + 20px) 30px env(safe-area-inset-bottom);
+  background: #f4f7f9 !important;
+}
+
+// NUEVO: Contenedor para centrar Logo y Nombre
+.header-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center; // Centra horizontalmente el logo
+  text-align: center;   // Centra los textos (h1 y p)
+  width: 100%;
+}
+
+.logo-wrapper {
+  width: 110px;
+  height: 110px;
+  background: #ffffff !important;
+  border-radius: 28px;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e1e8ef !important;
+  margin-bottom: 20px; // Espacio entre logo y nombre
+
+  .logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
+  }
+}
+
+.main-title {
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: #231b6b !important;
+  margin: 0 auto; // Asegura centrado
+  width: 100%;    // Ocupa todo el ancho para que text-align funcione
+}
+
+.main-subtitle {
+  color: #707a89 !important;
+  margin-top: 5px;
+  width: 100%;
+}
+
+.classic-input {
+  --background: #ffffff !important;
+  --color: #000000 !important;
+  background: #ffffff !important;
+  border: 1px solid #d1d9e2 !important;
+  border-radius: 14px;
+  margin-bottom: 15px;
+
+  ion-label, ion-input, ion-icon {
+    --color: #000000 !important;
+    color: #000000 !important;
+  }
+  
+  &::part(native) {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+}
+
+.btn-classic-blue {
+  --background: #231b6b !important;
+  --color: #ffffff !important;
+  margin-top: 20px;
+  height: 56px;
+  width: 100%;
+  --border-radius: 14px;
+}
+
+body.dark {
+  ion-content.light-mode-only {
+    --background: #f4f7f9 !important;
+    --color: #000000 !important;
+    
+    .auth-container, .classic-input, .main-title, .main-subtitle {
+       background-color: transparent !important;
+       color: #000000 !important;
+    }
+
+    .classic-input {
+      --background: #ffffff !important;
+      background: #ffffff !important;
+    }
+    
+    .main-title { color: #231b6b !important; }
+  }
+}

@@ -1,0 +1,47 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/perfil" text="Atrás"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Marketplace Atja</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content style="--background: #f4f7fa;">
+  
+  <div class="ion-padding" style="background: white; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; text-align: center;">
+    <ion-icon name="storefront-outline" color="primary" style="font-size: 3rem;"></ion-icon>
+    <h2 style="color: #1e3c72; font-weight: bold; margin: 10px 0 5px;">Tienda Oficial</h2>
+    <p style="color: #666; margin: 0; font-size: 0.9rem;">Finaliza tu compra de forma segura en nuestro sitio web.</p>
+  </div>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col size="6" *ngFor="let p of productos">
+        <ion-card style="margin: 5px; border-radius: 20px; box-shadow: 0 6px 15px rgba(0,0,0,0.04); border: none; background: white;">
+          <div style="background: #f9f9f9; padding: 25px; text-align: center;">
+            <ion-icon name="bag-check-outline" style="font-size: 3.5rem; color: #d1d1d1;"></ion-icon>
+          </div>
+          
+          <ion-card-header style="padding: 12px;">
+            <ion-card-subtitle color="primary" style="font-weight: bold; font-size: 1rem;">${{ p.precio }}.00</ion-card-subtitle>
+            <ion-card-title style="font-size: 0.85rem; font-weight: bold; color: #333;">{{ p.nombre }}</ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content style="padding: 0 12px 12px;">
+            <p style="font-size: 0.7rem; color: #999; margin-bottom: 12px; height: 35px; overflow: hidden;">{{ p.descripcion }}</p>
+            
+            <ion-button expand="block" size="small" (click)="verEnWeb(p.sku)" style="--border-radius: 12px; font-weight: bold; text-transform: none;">
+              <ion-icon name="globe-outline" slot="start"></ion-icon>
+              Comprar en Web
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div class="ion-padding" style="text-align: center; color: #999; font-size: 0.75rem;">
+    <p>Conexión segura con servidor Atja’Yaa’La</p>
+  </div>
+</ion-content>

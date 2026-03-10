@@ -1,0 +1,75 @@
+.pet-card-container {
+  margin-bottom: 16px;
+
+  .pet-card {
+    margin: 0;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(var(--ion-color-primary-rgb), 0.1);
+
+    .pet-avatar {
+      background: var(--ion-color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      .avatar-placeholder {
+        color: white;
+        font-weight: bold;
+        font-size: 20px;
+        text-transform: uppercase;
+      }
+    }
+
+    .pet-name {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--ion-color-dark);
+    }
+
+    .pet-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+
+      ion-badge {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .last-update {
+        font-size: 0.8rem;
+        color: #999;
+      }
+    }
+
+    .pet-info-grid {
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid #f0f0f0;
+      padding-top: 12px;
+
+      .info-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.85rem;
+        color: #666;
+      }
+    }
+  }
+}
+
+.empty-state {
+  text-align: center;
+  margin-top: 50px;
+  color: #ccc;
+
+  ion-icon {
+    font-size: 64px;
+  }
+}

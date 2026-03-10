@@ -1,0 +1,18 @@
+// For information on how to create your own theme, please refer to:
+// https://ionicframework.com/docs/theming/
+:root {
+  --ion-color-primary: #0054e9; /* Azul Tecnológico */
+  --ion-color-success: #2dd36f; /* Perro Seguro */
+  --ion-color-danger: #ff4961;  /* Alerta de Escape */
+  --ion-background-color: #f8f9fa; /* Gris claro moderno */
+}
+body.dark {
+  --ion-color-primary: #428cff;
+  --ion-background-color: #000000;
+  --ion-background-color-rgb: 0,0,0;
+  --ion-text-color: #ffffff;
+  --ion-text-color-rgb: 255,255,255;
+  --ion-step-50: #0d0d0d;
+  --ion-step-100: #1a1a1a;
+  /* ... asegúrate de que existan estas variables ... */
+}

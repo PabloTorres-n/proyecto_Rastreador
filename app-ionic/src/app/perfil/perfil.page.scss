@@ -1,0 +1,42 @@
+.bg-stable { --background: #f4f7fa !important; }
+
+.user-header {
+  text-align: center; background: #ffffff !important;
+  border-bottom-left-radius: 40px; border-bottom-right-radius: 40px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px;
+  
+  .avatar-wrapper {
+    position: relative; width: 90px; margin: 0 auto;
+    img { width: 90px; height: 90px; border-radius: 50%; border: 3px solid #1e3c72; padding: 4px; }
+    .role-tag {
+      position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%);
+      padding: 4px 12px; border-radius: 12px; font-size: 9px; font-weight: bold; color: #fff;
+      &.administrador { background: #1e3c72; }
+      &.cliente { background: #F38430; }
+    }
+  }
+  h2 { color: #333 !important; margin-top: 15px; font-weight: bold; }
+  p { color: #666 !important; font-size: 0.8rem; }
+}
+
+.dashboard-container { display: block !important; visibility: visible !important; padding: 0 10px; margin-bottom: 10px; }
+
+.metric-card {
+  padding: 15px; border-radius: 20px; color: #fff !important; display: flex; align-items: center; gap: 10px;
+  &.blue { background: linear-gradient(135deg, #1e3c72, #2a5298) !important; }
+  &.red { background: linear-gradient(135deg, #cb2d3e, #ef473a) !important; }
+  .data { h3 { color: #fff !important; margin: 0; font-size: 1.1rem; } small { color: rgba(255,255,255,0.8) !important; font-size: 0.7rem; } }
+}
+
+.menu-list-stable {
+  margin: 15px; background: #ffffff !important; border-radius: 20px; overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  ion-item { --background: #ffffff !important; --color: #333 !important; }
+}
+
+.info-card-stable {
+  background: #ffffff !important; padding: 15px; border-radius: 20px; margin: 0 10px 10px;
+  display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  h3 { margin: 0; color: #333 !important; font-weight: bold; }
+  p { margin: 0; font-size: 0.8rem; color: #666 !important; }
+}

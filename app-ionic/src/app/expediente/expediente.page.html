@@ -1,0 +1,66 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/perfil" text="Atrás"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Expediente de {{ datosMascota.nombre }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content style="--background: #f4f7fa;">
+  
+  <div class="ion-padding" style="text-align: center; background: white; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px;">
+    <ion-avatar style="width: 120px; height: 120px; margin: 0 auto; border: 4px solid #1e3c72; background: #eee; overflow: hidden;">
+      <img [src]="datosMascota.foto" alt="Mascota" />
+    </ion-avatar>
+    <h1 style="color: #333; font-weight: bold; margin-top: 15px; margin-bottom: 5px;">{{ datosMascota.nombre }}</h1>
+    <ion-badge color="secondary" style="padding: 8px 15px; border-radius: 10px;">{{ datosMascota.especie }}</ion-badge>
+  </div>
+
+  <ion-grid class="ion-padding-horizontal">
+    <ion-row>
+      <ion-col size="6">
+        <div style="background: white; padding: 15px; border-radius: 15px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #f0f0f0;">
+          <ion-icon name="calendar-outline" color="primary" style="font-size: 1.2rem;"></ion-icon>
+          <small style="color: #666; display: block; margin-top: 5px;">Edad</small>
+          <strong style="color: #1e3c72;">{{ datosMascota.edad }}</strong>
+        </div>
+      </ion-col>
+      <ion-col size="6">
+        <div style="background: white; padding: 15px; border-radius: 15px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #f0f0f0;">
+          <ion-icon name="hardware-chip-outline" color="primary" style="font-size: 1.2rem;"></ion-icon>
+          <small style="color: #666; display: block; margin-top: 5px;">ID Collar</small>
+          <strong style="color: #1e3c72;">{{ datosMascota.idCollar }}</strong>
+        </div>
+      </ion-col>
+    </ion-row> </ion-grid>
+
+  <div class="ion-padding">
+    <div style="display: flex; align-items: center; margin-bottom: 12px; gap: 10px; padding-left: 5px;">
+      <ion-icon name="medical-outline" color="primary" style="font-size: 1.6rem;"></ion-icon>
+      <h3 style="margin: 0; color: #1e3c72; font-weight: bold; font-size: 1.1rem;">Historial Clínico</h3>
+    </div>
+
+    <ion-list lines="none" style="background: transparent;">
+      <ion-item *ngFor="let vacuna of historialVacunas" style="--background: white; margin-bottom: 12px; --border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #f0f0f0;">
+        <ion-icon [name]="vacuna.estatus === 'Aplicada' ? 'shield-checkmark-outline' : 'alert-circle-outline'" 
+                  [color]="vacuna.estatus === 'Aplicada' ? 'success' : 'warning'" slot="start" style="font-size: 1.8rem;"></ion-icon>
+        <ion-label>
+          <h2 style="font-weight: bold; color: #333; font-size: 1rem;">{{ vacuna.nombre }}</h2>
+          <p style="font-size: 0.85rem; color: #888;">{{ vacuna.fecha }}</p>
+        </ion-label>
+        <ion-badge [color]="getBadgeColor(vacuna.estatus)" slot="end" style="font-weight: normal; border-radius: 6px;">
+          {{ vacuna.estatus }}
+        </ion-badge>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <div class="ion-padding">
+    <ion-button expand="block" fill="outline" (click)="irAPerfil()" style="--border-radius: 12px; font-weight: bold; text-transform: none; height: 45px;">
+      <ion-icon name="chevron-back-outline" slot="start"></ion-icon>
+      Regresar al Panel Principal
+    </ion-button>
+  </div>
+
+</ion-content>

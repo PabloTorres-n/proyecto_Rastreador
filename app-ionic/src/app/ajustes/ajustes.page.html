@@ -1,0 +1,70 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Configuración</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="bg-modern ion-padding">
+
+  <ion-list-header>
+    <ion-label>APARIENCIA</ion-label>
+  </ion-list-header>
+  
+  <ion-list lines="inset" class="custom-list">
+    <ion-item class="action-item">
+      <ion-icon slot="start" name="moon-outline" color="tertiary"></ion-icon>
+      <ion-label>Modo Oscuro</ion-label>
+      <ion-toggle 
+        slot="end" 
+        [checked]="isDarkMode" 
+        (ionChange)="toggleDarkMode($event)">
+      </ion-toggle>
+    </ion-item>
+  </ion-list>
+
+  <ion-list-header>
+    <ion-label>DISPOSITIVO GPS</ion-label>
+  </ion-list-header>
+  
+  <ion-list lines="inset" class="custom-list">
+    <ion-item class="action-item">
+      <ion-icon slot="start" name="radio-outline" color="primary"></ion-icon>
+      <ion-label>ID del Collar</ion-label>
+      <ion-note slot="end" color="medium">ESP32-ATJ-01</ion-note>
+    </ion-item>
+    
+    <ion-item class="action-item">
+      <ion-icon slot="start" name="flash-outline" color="warning"></ion-icon>
+      <ion-label>Ahorro de Batería</ion-label>
+      <ion-toggle slot="end" color="success"></ion-toggle>
+    </ion-item>
+  </ion-list>
+
+  <ion-list-header>
+    <ion-label>SEGURIDAD</ion-label>
+  </ion-list-header>
+  
+  <ion-list lines="inset" class="custom-list">
+    <ion-item class="action-item">
+      <ion-icon slot="start" name="notifications-outline" color="primary"></ion-icon>
+      <ion-label>Alertas de Movimiento</ion-label>
+      <ion-toggle slot="end" [checked]="true"></ion-toggle>
+    </ion-item>
+    
+    <ion-item class="action-item">
+      <ion-icon slot="start" name="map-outline" color="primary"></ion-icon>
+      <ion-label>Radio de Geocerca</ion-label>
+      <ion-note slot="end" color="medium">50m</ion-note>
+    </ion-item>
+  </ion-list>
+
+  <div class="ion-text-center ion-padding-top ion-margin-top">
+    <small style="color: #8898aa; font-weight: 500;">
+      Atja’Yaa’La App v1.0.0
+    </small>
+  </div>
+
+</ion-content>

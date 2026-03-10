@@ -1,0 +1,31 @@
+<ion-app>
+  <ion-router-outlet></ion-router-outlet>
+
+  <div class="custom-tab-bar"  *ngIf="rutaActual !== 'login'">
+    <div class="tab-container">
+      <button class="tab-item" 
+              [class.active]="rutaActual === 'home'" 
+              (click)="navegar('home')">
+        <ion-icon name="home"></ion-icon>
+      </button>
+
+      <button class="tab-item" 
+              [class.active]="rutaActual === 'mapa'" 
+              (click)="navegar('mascotas')">
+        <ion-icon name="paw"></ion-icon>
+      </button>
+
+      <button class="tab-item" 
+              [class.active]="rutaActual === 'perfil'" 
+              (click)="navegar('perfil')">
+        <ion-icon name="person"></ion-icon>
+      </button>
+
+      <button class="tab-item" 
+              [class.active]="rutaActual === 'settings'" 
+              (click)="navegar('ajustes')">
+        <ion-icon name="settings-sharp"></ion-icon>
+      </button>
+    </div>
+  </div>
+</ion-app>

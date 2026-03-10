@@ -1,0 +1,223 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ */
+
+@import 'leaflet/dist/leaflet.css';
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/* Dark Mode */
+@import '@ionic/angular/css/palettes/dark.system.css';
+
+// --- ESTILOS GENERALES DE COMPONENTES ---
+
+ion-card {
+  border-radius: 20px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05) !important;
+  border: none;
+}
+
+#mapId {
+  border-radius: 0 0 30px 30px;
+  overflow: hidden;
+}
+
+// Espaciado global para que el menú flotante no tape el contenido
+ion-content {
+  --padding-bottom: 110px; 
+}.leaflet-pane.leaflet-overlay-pane svg {
+  z-index: 1000 !important;
+  display: block !important;
+}
+
+.leaflet-routing-alt {
+  display: none !important; /* Por si acaso sale el texto */
+}
+/* Forzar que la línea de la ruta sea visible */
+.leaflet-pane.leaflet-overlay-pane svg {
+  z-index: 600 !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
+path.leaflet-interactive {
+  stroke: #0000FF !important; /* Azul Rey */
+  stroke-width: 7px !important;
+  stroke-opacity: 0.8 !important;
+}
+
+/* Ocultar el cuadro blanco de texto con las direcciones */
+.leaflet-routing-container, .leaflet-routing-error {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+
+// --- MODO OSCURO CUSTOM ---
+.leaflet-routing-container { display: none !important; }
+/* FUERZA EL MODO OSCURO EN TODA LA APP */
+body.dark {
+  // 1. Fondo principal de la pantalla
+  --ion-background-color: #121212 !important;
+  --ion-text-color: #ffffff !important;
+
+  // 2. Forzar el fondo de ion-content y la clase bg-modern
+  ion-content, .bg-modern, .bg-light {
+    --background: #121212 !important;
+    background: #121212 !important;
+  }
+
+  // 3. Las tarjetas y elementos de lista
+  ion-item, ion-card, .action-item, .stat-card {
+    --background: #1e1e1e !important;
+    background: #1e1e1e !important;
+    --color: #ffffff !important;
+    color: #ffffff !important;
+    
+    // Si tienen sombras blancas, las quitamos o las oscurecemos
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
+  }
+  .tab-item {
+      color: #ffffff !important; // <--- ESTO pone todos los iconos en blanco
+      
+      ion-icon {
+        --color: #ffffff !important;
+      }
+    }
+  // 4. Los textos que se quedan en azul oscuro o negro
+  ion-label, h2, h3, strong, p, ion-title {
+    color: #ffffff !important;
+  }
+
+  // 5. Los encabezados de las listas (APARIENCIA, SEGURIDAD, etc)
+  ion-list-header {
+    --background: transparent !important;
+    ion-label {
+      color: #8898aa !important; // Un gris claro para que se lea bien
+    }
+  }
+  
+  // 6. La barra de navegación flotante
+  .custom-tab-bar .tab-container {
+    background: #1e1e1e !important;
+    border: 1px solid #333;
+  }
+}
+
+// --- DISEÑO DE PÁGINA ---
+
+.bg-modern { --background: #f8f9fd; }
+
+.main-hero-container {
+  text-align: center;
+  padding: 10px 0;
+  .pet-hero-logo {
+    width: 200px;
+    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+  }
+}
+
+.health-stats {
+  display: flex;
+  gap: 15px;
+  .stat-card {
+    flex: 1;
+    background: white;
+    padding: 15px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+    ion-icon { font-size: 24px; }
+    strong { font-size: 1.2rem; display: block; color: #231b6b; }
+    small { font-size: 0.7rem; color: #888; }
+    &.glass-blue ion-icon { color: #3880ff; }
+    &.glass-orange ion-icon { color: #F38430; }
+  }
+}
+
+.action-item {
+  --background: #ffffff;
+  --border-radius: 15px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+  font-weight: 500;
+}
+
+// --- BARRA DE NAVEGACIÓN FLOTANTE PREMIUM ---
+
+
+
+.custom-tab-bar {
+  position: fixed;
+  bottom: 25px; // Elevada del suelo
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 1000;
+
+  .tab-container {
+    background: #ffffff;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 85%;
+    max-width: 400px;
+    height: 70px;
+    border-radius: 22px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.18);
+    padding: 0 10px;
+  }
+
+  .tab-item {
+    background: none;
+    border: none;
+    font-size: 26px;
+    color: #231b6b;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 55px;
+    height: 55px;
+    border-radius: 16px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); // Efecto elástico
+
+    ion-icon {
+      transition: transform 0.3s ease;
+    }
+
+    // --- ESTADO SELECCIONADO ---
+    &.active {
+      background: #F38430; // Naranja de tu marca
+      color: white;
+      transform: translateY(-12px); // Salta hacia arriba
+      box-shadow: 0 10px 20px rgba(243, 132, 48, 0.4);
+
+      ion-icon {
+        transform: scale(1.15);
+      }
+    }
+
+    // Feedback visual al presionar (Active state nativo)
+    &:active {
+      transform: scale(0.9);
+    }
+  }
+}
