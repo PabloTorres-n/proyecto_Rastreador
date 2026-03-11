@@ -1,54 +1,42 @@
-<ion-header [translucent]="true" class="ion-no-border">
-  <ion-toolbar>
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="ios">
     <ion-title>Mis Mascotas</ion-title>
     <ion-buttons slot="end">
-      <ion-button color="primary">
-        <ion-icon name="add-circle-outline"></ion-icon>
+      <ion-button >
+        <ion-icon slot="icon-only" name="add-outline" class="add-icon"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding">
-  
-  <div *ngFor="let pet of mascotas" class="pet-card-container">
-    <ion-card class="pet-card">
-      <ion-item lines="none">
-        <ion-avatar slot="start" class="pet-avatar">
-          <div class="avatar-placeholder">{{ pet.nombre[0] }}</div>
-        </ion-avatar>
-        
-        <ion-label>
-          <h2 class="pet-name">{{ pet.nombre }}</h2>
-          <p class="pet-status">
-            <ion-badge [color]="pet.bateria < 20 ? 'danger' : 'success'" mode="ios">
-              <ion-icon name="battery-dead-outline" *ngIf="pet.bateria < 20"></ion-icon>
-              <ion-icon name="battery-charging-outline" *ngIf="pet.bateria >= 20"></ion-icon>
-              {{ pet.bateria }}%
-            </ion-badge>
-            <span class="last-update">Hace 2 min</span>
-          </p>
-        </ion-label>
-
-        <ion-button slot="end" fill="clear" (click)="verEnMapa(pet)">
-          <ion-icon name="navigate-circle" size="large" color="primary"></ion-icon>
-        </ion-button>
-      </ion-item>
-
-      <ion-card-content>
-        <div class="pet-info-grid">
-          <div class="info-item">
-            <ion-icon name="location-outline"></ion-icon>
-            <span>{{ pet.lat | number:'1.4-4' }}, {{ pet.lng | number:'1.4-4' }}</span>
-          </div>
+<ion-content>
+  <div class="list-wrapper">
+    <div *ngFor="let pet of mascotas" class="pet-item">
+      
+      <div class="info-row">
+        <div class="avatar-minimal">{{ pet.nombre[0] }}</div>
+        <div class="text-group">
+          <span class="name">{{ pet.nombre }}</span>
+          <span class="species">{{ pet.especie }}</span>
         </div>
-      </ion-card-content>
-    </ion-card>
-  </div>
+        
+        <div class="battery-mini" [class.low]="pet.bateria < 20">
+          <ion-icon [name]="pet.bateria < 20 ? 'battery-dead' : 'battery-charging'"></ion-icon>
+          {{ pet.bateria }}%
+        </div>
+      </div>
 
-  <div *ngIf="mascotas.length === 0" class="empty-state">
-    <ion-icon name="paw-outline"></ion-icon>
-    <p>Aún no tienes mascotas registradas.</p>
-  </div>
+      <div class="action-row">
+  <button class="btn-profile-ghost">
+    <ion-icon name="person-outline"></ion-icon>
+    Ver Perfil
+  </button>
 
+  <button class="btn-map-circle" (click)="verEnMapa(pet)">
+    <ion-icon name="paper-plane"></ion-icon>
+  </button>
+</div>
+
+    </div>
+  </div>
 </ion-content>

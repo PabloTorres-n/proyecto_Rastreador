@@ -221,3 +221,35 @@ body.dark {
     }
   }
 }
+
+/* Estilo del contenedor del Popup de Leaflet */
+.modern-popup-wrapper .leaflet-popup-content-wrapper {
+  background: #000 !important; // Negro total
+  color: #fff !important;
+  border-radius: 15px;
+  border: 1px solid #f97316; // Borde Naranja
+  padding: 5px;
+}
+
+.modern-popup-wrapper .leaflet-popup-tip {
+  background: #f97316 !important; // La flechita naranja
+}
+
+.custom-popup {
+  text-align: center;
+  h3 { margin: 0; color: #f97316; font-weight: 800; }
+  p { margin: 5px 0; font-size: 0.9rem; color: #ccc; }
+  
+  .btn-popup-orange {
+    background: #f97316;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 10px;
+    font-weight: 700;
+    width: 100%;
+    margin-top: 5px;
+    cursor: pointer;
+    &:active { transform: scale(0.95); }
+  }
+}

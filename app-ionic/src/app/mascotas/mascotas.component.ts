@@ -18,7 +18,8 @@ import {
   navigateCircle, 
   pawOutline, 
   locationOutline,
-  addCircleOutline 
+  addCircleOutline,paperPlane,personOutline
+
 } from 'ionicons/icons';
 
 @Component({
@@ -32,7 +33,7 @@ import {
     IonHeader, IonToolbar, IonTitle, IonButtons, 
     IonContent, IonCard, IonItem, IonAvatar, 
     IonLabel, IonBadge, IonIcon, IonButton, 
-    IonCardContent
+    IonCardContent,
   ]
 })
 export class MascotasComponent implements OnInit {
@@ -50,7 +51,8 @@ export class MascotasComponent implements OnInit {
       navigateCircle, 
       pawOutline, 
       locationOutline,
-      addCircleOutline
+      addCircleOutline,
+      paperPlane,personOutline
     });
   }
 
@@ -78,7 +80,9 @@ ngOnInit() {
   }
 }
 
-  verEnMapa(pet: any) {
-    this.router.navigate(['/home']);
-  }
+ verEnMapa(pet: any) {
+  this.router.navigate(['/home'], { 
+    queryParams: { petId: pet._id } 
+  });
+}
 }

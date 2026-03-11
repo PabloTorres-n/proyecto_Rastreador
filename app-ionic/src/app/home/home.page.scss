@@ -1,106 +1,144 @@
+/* 1. EL MAPA: Ocupa toda la pantalla detrás de todo */
 #mapId {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: -1; // El mapa se queda en el nivel 1
+  z-index: 1; // Nivel base
 }
 
-/* Estilo para el Badge arriba a la izquierda */
+/* 2. VARIABLES DINÁMICAS (Host controla los colores de la página) */
+:host {
+  --accent-color: #3880ff; // Azul por defecto (Claro)
+  --pill-bg: rgba(45, 211, 111, 0.15);
+  --pill-text: #1a5e33;
+}
+
+@media (prefers-color-scheme: dark) {
+  :host {
+    --accent-color: #f97316; // Naranja (Oscuro)
+    --pill-bg: rgba(249, 115, 22, 0.1); // Naranja suave para el pill en dark si prefieres
+    --pill-text: #f97316;
+  }
+}
+
+/* 3. OVERLAYS (Botones y Status) */
 .top-overlay {
   position: fixed;
   top: calc(env(safe-area-inset-top) + 15px);
   left: 15px;
-  z-index: 9999;
-  pointer-events: auto;
+  z-index: 1000;
+  pointer-events: none; // Permite clicks pasantes
 }
 
 .status-pill {
-  display: flex;
+  display: inline-flex; // Ajusta al contenido
   align-items: center;
   gap: 10px;
   padding: 8px 16px;
-  background: rgba(45, 211, 111, 0.15); // Verde muy suave
-  backdrop-filter: blur(10px); // Efecto de vidrio esmerilado
+  background: var(--pill-bg);
+  backdrop-filter: blur(10px);
   border: 1px solid rgba(45, 211, 111, 0.4);
   border-radius: 50px;
-  color: #1a5e33;
+  color: var(--pill-text);
   font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.3px;
+  pointer-events: auto; // Activa clicks solo en el pill
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 
-  ion-icon {
-    font-size: 16px;
-    color: #2dd36f;
-  }
-
-  /* El punto que parpadea como un radar */
-  .pulse-dot {
+  .pulse-dot, .pulse-dot::after {
     width: 8px;
     height: 8px;
     background-color: #2dd36f;
     border-radius: 50%;
-    position: relative;
+  }
 
-    &::after {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background-color: #2dd36f;
-      border-radius: 50%;
-      animation: ripple 2s infinite;
+  .pulse-dot::after {
+    content: '';
+    position: absolute;
+    animation: ripple 2s infinite;
+  }
+}
+
+.bottom-overlay {
+  position: fixed;
+  bottom: calc(env(safe-area-inset-bottom) + 110px); // Ajustado para que no lo tape la tab-bar
+  right: 20px;
+  z-index: 1000;
+  // Quitamos el top: 50% que lo rompía
+  
+  ion-fab-button {
+    --background: var(--accent-color);
+    --color: #ffffff;
+    --box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  }
+}
+
+/* 4. PARCHES DE LEAFLET (Inyectados en el DOM dinámico) */
+
+
+/* 5. IONIC FIXES */
+ion-content {
+  --background: black !important;
+  --overflow: hidden; // Evita scroll innecesario si el mapa es fixed
+}
+
+@keyframes ripple {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(3.5); opacity: 0; }
+}
+
+:host {
+  // Definimos NUESTRO naranja para que no use el azul de Ionic
+  --accent-color: #f97316; 
+  --pill-bg: rgba(249, 115, 22, 0.1);
+  --pill-text: #f97316;
+}
+
+::ng-deep {
+  /* 1. ELIMINAR BORDES AZULES DE ENFOQUE */
+  *:focus {
+    outline: none !important;
+  }
+
+  /* 2. POPUP: Negro con borde Naranja (Sin rastro de azul) */
+  .modern-popup-wrapper .leaflet-popup-content-wrapper {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 2px solid #f97316 !important; // FUERZA EL NARANJA
+    border-radius: 12px;
+    padding: 0;
+    box-shadow: 0 0 15px rgba(249, 115, 22, 0.4) !important;
+  }
+
+  .modern-popup-wrapper .leaflet-popup-tip {
+    background: #f97316 !important; // La flechita naranja
+  }
+
+  /* 3. BOTÓN IR: Naranja vibrante con texto blanco */
+  .btn-popup-action {
+    background: #f97316 !important;
+    color: #ffffff !important;
+    border: none !important;
+    font-size: 14px !important;
+    font-weight: 900 !important;
+    padding: 12px !important;
+    width: 100% !important;
+    border-radius: 0 0 10px 10px !important;
+    box-shadow: none !important;
+    
+    &:active {
+      background: #c2410c !important; // Naranja más oscuro al presionar
     }
   }
-}
 
-/* Animación de onda expansiva */
-@keyframes ripple {
-  0% {
-    transform: scale(1);
-    opacity: 1;
+  /* 4. RUTA (La línea entre tú y la mascota) */
+  path.leaflet-interactive {
+    stroke: #f97316 !important; // AZUL ELIMINADO, AHORA NARANJA
+    stroke-width: 6px !important;
+    stroke-opacity: 0.9 !important;
+    stroke-dasharray: 1, 12; // Estilo de puntos circulares
+    stroke-linecap: round;
   }
-  100% {
-    transform: scale(3.5);
-    opacity: 0;
-  }
-}
-
-/* Ajuste para Modo Oscuro */
-@media (prefers-color-scheme: dark) {
-  .status-pill {
-    background: rgba(45, 211, 111, 0.1);
-    color: #85ffad;
-    border-color: rgba(45, 211, 111, 0.3);
-  }
-}
-
-/* Estilo para el Botón abajo a la derecha */
-.bottom-overlay {
-  position: fixed; // FIXED es la clave
-  bottom: calc(env(safe-area-inset-bottom) + 30px);
-  right: 20px;
-  top: 50%;
-  z-index: 9999; // Máxima prioridad
-  pointer-events: auto;
-
-  ion-fab-button {
-    --background: #ffffff;
-    --color: #333;
-    --box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-    width: 56px;
-    height: 56px;
-  }
-}
-
-/* IMPORTANTE: Evita que el contenedor de Ionic tape el fondo */
-ion-content {
-  --background: transparent !important;
-}
-
-/* Parche para que Leaflet no gane la batalla de capas */
-.leaflet-container {
-  z-index: 1 !important;
 }

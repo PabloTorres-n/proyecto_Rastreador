@@ -19,6 +19,7 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.2.2",
     "nodemon": "^3.1.14",
-    "nodmeon": "^0.0.1-security"
+    "nodmeon": "^0.0.1-security",
+    "socket.io": "^4.8.3"
   }
 }
