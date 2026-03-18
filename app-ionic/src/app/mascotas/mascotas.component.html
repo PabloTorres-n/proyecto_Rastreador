@@ -3,13 +3,13 @@
     <ion-title>Mis Mascotas</ion-title>
     <ion-buttons slot="end">
       <ion-button >
-        <ion-icon slot="icon-only" name="add-outline" class="add-icon"></ion-icon>
+        <ion-icon slot="icon-only" name="add-circle" class="add-icon">+ </ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="light-bg">
   <div class="list-wrapper">
     <div *ngFor="let pet of mascotas" class="pet-item">
       
@@ -27,15 +27,15 @@
       </div>
 
       <div class="action-row">
-  <button class="btn-profile-ghost">
-    <ion-icon name="person-outline"></ion-icon>
-    Ver Perfil
-  </button>
+        <button class="btn-profile-ghost" >
+          <ion-icon name="person-outline"></ion-icon>
+          Ver Perfil
+        </button>
 
-  <button class="btn-map-circle" (click)="verEnMapa(pet)">
-    <ion-icon name="paper-plane"></ion-icon>
-  </button>
-</div>
+        <button class="btn-map-square" (click)="verEnMapa(pet)">
+          <ion-icon name="paper-plane"></ion-icon>
+        </button>
+      </div>
 
     </div>
   </div>

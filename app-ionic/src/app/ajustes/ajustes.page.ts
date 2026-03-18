@@ -1,13 +1,16 @@
-import { Component, OnInit } from '@angular/core'; // <--- Importamos OnInit
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { 
-  IonContent, IonHeader, IonToolbar, IonTitle, IonButtons, 
-  IonBackButton, IonList, IonListHeader, IonItem, IonIcon, 
-  IonLabel, IonNote, IonToggle 
+  IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, 
+  IonBackButton, IonList, IonItem, IonLabel, IonIcon, 
+  IonToggle, IonSelect, IonSelectOption, IonNote, IonBadge 
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
-  radioOutline, flashOutline, notificationsOutline, mapOutline, moonOutline 
+  moonOutline, sunnyOutline, navigateOutline, mapOutline, 
+  exitOutline, flashOutline, wifiOutline, radioOutline,timerOutline,      // Para el Intervalo de Reporte
+  locateOutline, chevronDownOutline    // Para la Geocerca 
 } from 'ionicons/icons';
 
 @Component({
@@ -16,39 +19,87 @@ import {
   styleUrls: ['./ajustes.page.scss'],
   standalone: true,
   imports: [
-    CommonModule, IonContent, IonHeader, IonToolbar, IonTitle, 
-    IonButtons, IonBackButton, IonList, IonListHeader, IonItem, 
-    IonIcon, IonLabel, IonNote, IonToggle
+    CommonModule, FormsModule, IonHeader, IonToolbar, IonTitle, 
+    IonContent, IonButtons, IonBackButton, IonList, IonItem, 
+    IonLabel, IonIcon, IonToggle, IonSelect, IonSelectOption, 
+    IonNote, IonBadge
   ]
 })
-export class AjustesPage implements OnInit { // <--- Agregamos implements OnInit
+export class AjustesPage implements OnInit {
 
-  // Esta variable controlará si el switch aparece prendido o apagado al cargar
-  isDarkMode: boolean = false; 
+  isDarkMode: boolean = false;
+  
+  // Variables para los ajustes del rastreador
+  reportInterval: string = '30';
+  geofenceEnabled: boolean = true;
+  lowBatteryAlert: boolean = true;
 
   constructor() {
-    addIcons({ 
-      radioOutline, 
-      flashOutline, 
-      notificationsOutline, 
+    // Registramos los iconos que usamos en el HTML
+    addIcons({
+      moonOutline,
+      sunnyOutline,
+      navigateOutline,
       mapOutline,
-      moonOutline 
+      exitOutline,
+      flashOutline,
+      wifiOutline,
+      radioOutline,timerOutline,chevronDownOutline,locateOutline
     });
   }
 
-  // Se ejecuta al entrar a la pantalla
   ngOnInit() {
-    // Revisamos si el body ya tiene la clase 'dark' para prender el switch
-    this.isDarkMode = document.body.classList.contains('dark');
+    this.checkCurrentTheme();
+    this.loadDeviceSettings();
   }
 
-  toggleDarkMode(event: any) {
-    const active = event.detail.checked;
-    
-    // Aplicamos el cambio visual
-    document.body.classList.toggle('dark', active);
+  /**
+   * Verifica el estado actual del modo oscuro para sincronizar el toggle
+   */
+  checkCurrentTheme() {
+    const saved = localStorage.getItem('darkMode');
+    if (saved !== null) {
+      this.isDarkMode = saved === 'true';
+    } else {
+      this.isDarkMode = document.body.classList.contains('dark');
+    }
+  }
 
-    // GUARDAMOS la preferencia en la memoria del teléfono
-    localStorage.setItem('darkMode', active ? 'true' : 'false');
+  /**
+   * Cambia el tema y guarda la preferencia
+   */
+  toggleDarkMode(event: any) {
+    this.isDarkMode = event.detail.checked;
+    document.body.classList.toggle('dark', this.isDarkMode);
+    localStorage.setItem('darkMode', this.isDarkMode.toString());
+  }
+
+  /**
+   * Carga configuraciones previas del dispositivo (si las hay)
+   */
+  loadDeviceSettings() {
+    const interval = localStorage.getItem('reportInterval');
+    if (interval) this.reportInterval = interval;
+    
+    // Aquí podrías cargar más datos desde una API o Storage
+  }
+
+  /**
+   * Ejemplo de función para guardar cambios de GPS
+   */
+  onIntervalChange(event: any) {
+    const newValue = event.detail.value;
+    this.reportInterval = newValue;
+    localStorage.setItem('reportInterval', newValue);
+    console.log('Nuevo intervalo de reporte enviado al collar:', newValue);
+    
+    // Aquí iría la lógica para enviar el comando por Bluetooth o HTTP al ESP32
+  }
+
+  // Función para simular la actualización de la geocerca
+  async updateGeofence() {
+    console.log('Abriendo mapa para ajustar geocerca...');
+    // Aquí podrías navegar a una página de mapa:
+    // this.router.navigate(['/geofence-map']);
   }
 }

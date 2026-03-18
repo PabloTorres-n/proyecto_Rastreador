@@ -1,0 +1,116 @@
+// TUS COLORES
+$blue-deep: #231B6B;
+$orange-vibrant: #F38430;
+
+:host {
+  --bg-page: #f8faff;
+  --card-white: #ffffff;
+  --text-main: #{$blue-deep};
+  --text-sub: #8e99af;
+  --border-subtle: #f1f4f9;
+}
+
+:host-context(body.dark) {
+  --bg-page: #000000;
+  --card-white: #121212;
+  --text-main: #ffffff;
+  --text-sub: #71717a;
+  --border-subtle: #1f1f23;
+
+  ion-toolbar {
+    --background: #000000;
+    --color: #ffffff; // El título se vuelve blanco
+  }
+
+  ion-back-button {
+    --color: #ffffff; // La flecha de atrás se vuelve blanca
+  }
+}
+
+
+.main-container {
+  padding: 16px;
+  background: var(--bg-page);
+  min-height: 100%;
+}
+
+.section-header {
+  margin: 20px 0 12px 8px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-sub);
+}
+
+.settings-card {
+  background: var(--card-white);
+  border-radius: 28px; // Mucho más redondeado para quitar lo "cuadrado"
+  padding: 8px 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--border-subtle);
+
+  .setting-row {
+    display: flex;
+    align-items: center;
+    padding: 14px 0;
+    
+    .icon-inner {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      font-size: 1.3rem;
+
+      &.blue { background: rgba(35, 27, 107, 0.08); color: $blue-deep; }
+      &.orange { background: rgba(243, 132, 48, 0.08); color: $orange-vibrant; }
+      &.dark { background: rgba(142, 153, 175, 0.1); color: var(--text-sub); }
+    }
+
+    .info {
+      flex: 1;
+      h3 {
+        margin: 0;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--text-main);
+      }
+      p {
+        margin: 2px 0 0;
+        font-size: 0.75rem;
+        color: var(--text-sub);
+      }
+    }
+
+    ion-select {
+      --placeholder-color: var(--text-main);
+      --color: var(--text-main);
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    ion-toggle {
+      padding: 0;
+      --handle-background-checked: #fff;
+      --track-background-checked: #{$orange-vibrant};
+    }
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border-subtle);
+    margin: 0 0 0 57px; // Alineado con el texto, no con el icono
+  }
+}
+
+.app-version {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-sub);
+  opacity: 0.6;
+}

@@ -40,31 +40,33 @@ export class AppComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
-
-  checkTheme() {
-    const savedTheme = localStorage.getItem('darkMode');
-    let isDark: boolean;
-
-    if (savedTheme !== null) {
-      isDark = savedTheme === 'true';
-    } else {
-      isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  ngOnInit() {
+  // Escuchar si el usuario cambia el tema del sistema (solo si no hay preferencia guardada)
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    if (localStorage.getItem('darkMode') === null) {
+      this.aplicarClaseDark(e.matches);
     }
+  });
+}
 
-    setTimeout(() => {
-      this.aplicarClaseDark(isDark);
-    }, 50); 
+checkTheme() {
+  const savedTheme = localStorage.getItem('darkMode');
+  let isDark: boolean;
+
+  if (savedTheme !== null) {
+    isDark = savedTheme === 'true';
+  } else {
+    isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
   }
 
-  private aplicarClaseDark(isDark: boolean) {
-    if (isDark) {
-      document.body.classList.add('dark');
-    } else {
-      document.body.classList.remove('dark');
-    }
-  }
+  // Aplicamos de inmediato
+  this.aplicarClaseDark(isDark);
+}
 
+private aplicarClaseDark(isDark: boolean) {
+  // Usamos toggle para que sea más limpio
+  document.body.classList.toggle('dark', isDark);
+}
   async initializeApp() {
     this.checkTheme();
 

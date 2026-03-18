@@ -1,156 +1,99 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar color="primary">
-    <ion-title>Mando Atja’Yaa’La</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="cambiarRol()">
-        <ion-icon slot="icon-only" name="repeat-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content style="--background: #f4f7fa;">
-  
-  <div class="ion-padding" style="text-align: center; background: white; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 15px;">
-    <img src="assets/logoO.png" style="width: 90px; height: 90px; border-radius: 50%; border: 3px solid #1e3c72; padding: 4px;" />
-    <h2 style="color: #333; margin-top: 10px; font-weight: bold;">Oswaldo Martínez</h2>
-    <p style="color: #666; font-size: 0.9rem; margin: 0 0 5px;">oswaldo@software.com</p>
-    <p style="color: #1e3c72; font-weight: bold; margin: 0; font-size: 0.8rem; letter-spacing: 1px;">{{ userRole | uppercase }}</p>
-  </div>
-
-  <div *ngIf="userRole === 'administrador'">
+<ion-content class="light-bg">
+  <div class="main-container">
     
-    <ion-grid>
-      <ion-row>
-        <ion-col size="6">
-          <div style="background: linear-gradient(135deg, #1e3c72, #2a5298); padding: 15px; border-radius: 20px; color: white; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-            <ion-icon name="hardware-chip-outline" style="font-size: 2rem; margin-bottom: 5px;"></ion-icon>
-            <small style="opacity: 0.8;">Equipos</small>
-            <h3 style="margin: 0; font-weight: bold; font-size: 1.3rem;">18 / 24</h3>
-          </div>
-        </ion-col>
-        <ion-col size="6">
-          <div style="background: linear-gradient(135deg, #cb2d3e, #ef473a); padding: 15px; border-radius: 20px; color: white; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-            <ion-icon name="warning-outline" style="font-size: 2rem; margin-bottom: 5px;"></ion-icon>
-            <small style="opacity: 0.8;">Alertas</small>
-            <h3 style="margin: 0; font-weight: bold; font-size: 1.3rem;">03</h3>
-          </div>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col size="12">
-          <div style="background: linear-gradient(135deg, #f12711, #f5af19); padding: 15px; border-radius: 20px; color: white; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <ion-icon name="stats-chart-outline" style="font-size: 2.2rem;"></ion-icon>
-              <div>
-                <small style="opacity: 0.9; text-transform: uppercase; font-size: 0.7rem;">Ingresos Semanales</small>
-                <h3 style="margin: 0; font-weight: bold; font-size: 1.4rem;">$4,250.00 MXN</h3>
-              </div>
-            </div>
-            <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.3); border-radius: 10px; margin-top: 12px; overflow: hidden;">
-              <div style="width: 75%; height: 100%; background: white; border-radius: 10px;"></div>
-            </div>
-          </div>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+    <div class="profile-header">
+      <div class="avatar-wrapper">
+        <img src="https://ui-avatars.com/api/?name=Juan+Perez&background=eef2ff&color=231b6b" alt="Avatar" />
+        <div class="edit-btn">
+          <ion-icon name="camera"></ion-icon>
+        </div>
+      </div>
+      <h2>Juan Pérez</h2>
+      <span class="badge-role">CLIENTE VERIFICADO</span>
+    </div>
 
-    <ion-list *ngIf="!editandoInventario" lines="none" style="margin: 15px; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-      <ion-list-header style="background: white;"><ion-label>OPERACIONES DEL SISTEMA</ion-label></ion-list-header>
+    <div class="info-section">
+      <p class="label-group">Datos de contacto</p>
       
-      <ion-item button (click)="abrirInventario()" style="--background: white;">
-        <ion-icon slot="start" name="storefront-outline" color="primary"></ion-icon>
-        <ion-label>Modificación de Precios (Tienda)</ion-label>
-      </ion-item>
-      <ion-item button (click)="abrirMonitorESP32()" style="--background: white;">
-        <ion-icon slot="start" name="pulse-outline" color="primary"></ion-icon>
-        <ion-label>Monitor de Dispositivos (Salud)</ion-label>
-      </ion-item>
-      <ion-item button (click)="abrirGestionUsuarios()" style="--background: white;">
-        <ion-icon slot="start" name="people-outline" color="primary"></ion-icon>
-        <ion-label>Gestión de Usuarios y Accesos</ion-label>
-      </ion-item>
-      <ion-item button (click)="abrirLogsYConfiguracion()" style="--background: white;">
-        <ion-icon slot="start" name="server-outline" color="primary"></ion-icon>
-        <ion-label>Logs del Sistema y Parámetros</ion-label>
-      </ion-item>
-    </ion-list>
+      <div class="info-card">
+        <div class="info-item">
+          <div class="icon-box blue-icon">
+            <ion-icon name="mail-outline"></ion-icon>
+          </div>
+          <div class="text-box">
+            <small>Email</small>
+            <p>juan.perez@example.com</p>
+          </div>
+        </div>
 
-    <div *ngIf="editandoInventario" class="ion-padding">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <h4 style="color: #1e3c72; margin: 0; font-weight: bold;">Editor de Mercado</h4>
-        <ion-button fill="clear" color="danger" (click)="cerrarInventario()">Cerrar</ion-button>
+        <div class="info-item">
+          <div class="icon-box blue-icon">
+            <ion-icon name="call-outline"></ion-icon>
+          </div>
+          <div class="text-box">
+            <small>Teléfono</small>
+            <p>+52 33 1234 5678</p>
+          </div>
+        </div>
+
+        <div class="info-item no-border">
+          <div class="icon-box blue-icon">
+            <ion-icon name="location-outline"></ion-icon>
+          </div>
+          <div class="text-box">
+            <small>Ubicación</small>
+            <p>Guadalajara, Jalisco</p>
+          </div>
+        </div>
       </div>
 
-      <ion-button expand="block" color="secondary" (click)="nuevoProducto()" style="margin-bottom: 15px;">
-        <ion-icon name="add-circle-outline" slot="start"></ion-icon> Agregar Artículo
-      </ion-button>
-      
-      <div *ngFor="let producto of listaProductos; let i = index" style="background: white; border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #eee; box-shadow: 0 2px 5px rgba(0,0,0,0.02);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-          <ion-input [(ngModel)]="producto.nombre" label="Nombre" labelPlacement="floating" style="font-weight: bold; color: #333; flex: 1;"></ion-input>
-          <ion-button fill="clear" color="danger" (click)="eliminarProducto(i)">
-            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+      <!-- <p class="label-group">Plan y Servicios</p>
+      <div class="info-card special-card">
+        <div class="info-item no-border">
+          <div class="icon-box orange-gradient">
+            <ion-icon name="ribbon-outline" style="color: white;"></ion-icon>
+          </div>
+          <div class="text-box">
+            <small>Plan Activo</small>
+            <p style="color: #f38430; font-weight: 700;">Plan Rastreo Pro</p>
+          </div>
+          <ion-button slot="end" fill="clear" color="warning" class="renew-btn">
+            Renovar
           </ion-button>
         </div>
-        <ion-grid style="padding: 0;">
-          <ion-row>
-            <ion-col size="6">
-              <ion-input type="number" [(ngModel)]="producto.precio" label="Precio ($)" labelPlacement="stacked" style="background: #f9f9f9; border-radius: 8px; padding: 5px; color: #333;"></ion-input>
-            </ion-col>
-            <ion-col size="6">
-              <ion-input type="number" [(ngModel)]="producto.stock" label="Stock" labelPlacement="stacked" style="background: #f9f9f9; border-radius: 8px; padding: 5px; color: #333;"></ion-input>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
+      </div> -->
+
+      <p class="label-group">Más Opciones</p>
+      <div class="info-card">
+        <div class="info-item">
+          <div class="icon-box orange-icon">
+            <ion-icon name="card-outline"></ion-icon>
+          </div>
+          <div class="text-box">
+            <p>Métodos de Pago</p>
+          </div>
+          <ion-icon name="chevron-forward-outline" slot="end" class="arrow-icon"></ion-icon>
+        </div>
+
+        <div class="info-item no-border">
+          <div class="icon-box orange-icon">
+            <ion-icon name="help-circle-outline"></ion-icon>
+          </div>
+          <div class="text-box">
+            <p>Soporte Técnico</p>
+          </div>
+          <ion-icon name="chevron-forward-outline" slot="end" class="arrow-icon"></ion-icon>
+        </div>
       </div>
-      
-      <ion-button expand="block" (click)="guardarCambiosInventario()" style="margin-top: 10px; --background: #1e3c72; --border-radius: 12px; font-weight: bold;">
-        <ion-icon name="save-outline" slot="start"></ion-icon> Sincronizar Precios
+
+    </div>
+
+    <div class="footer-actions">
+      <ion-button expand="block" fill="clear" class="logout-button" (click)="logout()">
+        <ion-icon name="log-out-outline" slot="start"></ion-icon>
+        Desconectar cuenta
       </ion-button>
     </div>
-  </div>
 
-  <div *ngIf="userRole === 'cliente'">
-    <ion-grid>
-      <ion-row>
-        <ion-col size="6">
-          <div style="background: white; padding: 15px; border-radius: 20px; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-            <ion-icon name="paw-outline" color="primary" style="font-size: 2rem;"></ion-icon>
-            <div>
-              <h3 style="margin: 0; color: #333; font-weight: bold;">1,240</h3>
-              <p style="margin: 0; font-size: 0.7rem; color: #666;">Pasos hoy</p>
-            </div>
-          </div>
-        </ion-col>
-        <ion-col size="6">
-          <div style="background: white; padding: 15px; border-radius: 20px; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-            <ion-icon name="battery-charging-outline" color="success" style="font-size: 2rem;"></ion-icon>
-            <div>
-              <h3 style="margin: 0; color: #333; font-weight: bold;">85%</h3>
-              <p style="margin: 0; font-size: 0.7rem; color: #666;">Energía</p>
-            </div>
-          </div>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-
-    <ion-list lines="none" style="margin: 15px; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-      <ion-list-header style="background: white;"><ion-label>CUIDADO DE MASCOTA</ion-label></ion-list-header>
-      
-      <ion-item button (click)="irAMisMascotas()" style="--background: white;">
-        <ion-icon slot="start" name="paw-outline" color="secondary"></ion-icon>
-        <ion-label style="color: #333;">Mis Perros</ion-label>
-      </ion-item>
-
-      <ion-item button (click)="router.navigate(['/tienda'])" style="--background: white;">
-        <ion-icon slot="start" name="storefront-outline" color="secondary"></ion-icon>
-        <ion-label style="color: #333;">Tienda de Accesorios</ion-label>
-      </ion-item>
-    </ion-list>
-  </div>
-
-  <div class="ion-padding">
-    <ion-button expand="block" fill="clear" color="danger" (click)="logout()">Cerrar Sesión</ion-button>
   </div>
 </ion-content>

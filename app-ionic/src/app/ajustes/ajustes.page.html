@@ -1,5 +1,5 @@
 <ion-header class="ion-no-border">
-  <ion-toolbar color="primary">
+  <ion-toolbar mode="ios">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="home" text=""></ion-back-button>
     </ion-buttons>
@@ -7,64 +7,59 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="bg-modern ion-padding">
+<ion-content class="bg-modern">
+  <div class="main-container">
 
-  <ion-list-header>
-    <ion-label>APARIENCIA</ion-label>
-  </ion-list-header>
-  
-  <ion-list lines="inset" class="custom-list">
-    <ion-item class="action-item">
-      <ion-icon slot="start" name="moon-outline" color="tertiary"></ion-icon>
-      <ion-label>Modo Oscuro</ion-label>
-      <ion-toggle 
-        slot="end" 
-        [checked]="isDarkMode" 
-        (ionChange)="toggleDarkMode($event)">
-      </ion-toggle>
-    </ion-item>
-  </ion-list>
-
-  <ion-list-header>
-    <ion-label>DISPOSITIVO GPS</ion-label>
-  </ion-list-header>
-  
-  <ion-list lines="inset" class="custom-list">
-    <ion-item class="action-item">
-      <ion-icon slot="start" name="radio-outline" color="primary"></ion-icon>
-      <ion-label>ID del Collar</ion-label>
-      <ion-note slot="end" color="medium">ESP32-ATJ-01</ion-note>
-    </ion-item>
+    <div class="section-header">Rastreo y Seguridad</div>
     
-    <ion-item class="action-item">
-      <ion-icon slot="start" name="flash-outline" color="warning"></ion-icon>
-      <ion-label>Ahorro de Batería</ion-label>
-      <ion-toggle slot="end" color="success"></ion-toggle>
-    </ion-item>
-  </ion-list>
+    <div class="settings-card">
+      <div class="setting-row">
+        <div class="icon-inner blue">
+          <ion-icon name="timer-outline"></ion-icon>
+        </div>
+        <div class="info">
+          <h3>Intervalo de Reporte</h3>
+          <p>Frecuencia de actualización GPS</p>
+        </div>
+        <ion-select slot="end" interface="popover" value="30" toggleIcon="chevron-down-outline">
+          <ion-select-option value="10">10s</ion-select-option>
+          <ion-select-option value="30">30s</ion-select-option>
+          <ion-select-option value="300">5m</ion-select-option>
+        </ion-select>
+      </div>
 
-  <ion-list-header>
-    <ion-label>SEGURIDAD</ion-label>
-  </ion-list-header>
-  
-  <ion-list lines="inset" class="custom-list">
-    <ion-item class="action-item">
-      <ion-icon slot="start" name="notifications-outline" color="primary"></ion-icon>
-      <ion-label>Alertas de Movimiento</ion-label>
-      <ion-toggle slot="end" [checked]="true"></ion-toggle>
-    </ion-item>
-    
-    <ion-item class="action-item">
-      <ion-icon slot="start" name="map-outline" color="primary"></ion-icon>
-      <ion-label>Radio de Geocerca</ion-label>
-      <ion-note slot="end" color="medium">50m</ion-note>
-    </ion-item>
-  </ion-list>
+      <div class="divider"></div>
 
-  <div class="ion-text-center ion-padding-top ion-margin-top">
-    <small style="color: #8898aa; font-weight: 500;">
+      <div class="setting-row">
+        <div class="icon-inner orange">
+          <ion-icon name="locate-outline"></ion-icon>
+        </div>
+        <div class="info">
+          <h3>Geocerca Automática</h3>
+          <p>Aviso si sale del perímetro</p>
+        </div>
+        <ion-toggle slot="end" color="warning" [checked]="true"></ion-toggle>
+      </div>
+    </div>
+
+    <div class="section-header">Personalización</div>
+
+    <div class="settings-card">
+      <div class="setting-row">
+        <div class="icon-inner dark">
+          <ion-icon [name]="isDarkMode ? 'moon' : 'sunny-outline'"></ion-icon>
+        </div>
+        <div class="info">
+          <h3>Modo Oscuro</h3>
+          <p>Tema visual de la aplicación</p>
+        </div>
+        <ion-toggle slot="end" [checked]="isDarkMode" (ionChange)="toggleDarkMode($event)"></ion-toggle>
+      </div>
+    </div>
+
+    <div class="app-version">
       Atja’Yaa’La App v1.0.0
-    </small>
-  </div>
+    </div>
 
+  </div>
 </ion-content>

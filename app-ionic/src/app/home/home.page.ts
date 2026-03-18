@@ -8,7 +8,7 @@ import { locate, layers, shieldCheckmark, chevronBackOutline, paperPlane, person
 import { Geolocation } from '@capacitor/geolocation';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-
+import { NavController } from '@ionic/angular';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -17,144 +17,140 @@ import { ActivatedRoute } from '@angular/router';
   imports: [CommonModule, IonContent, IonIcon, IonFab, IonFabButton, IonBadge]
 })
 export class HomePage implements OnDestroy {
+  private navCtrl = inject(NavController);
   private watchId: any;
   private seleccionSub: Subscription | null = null;
+  private routeSub: Subscription | null = null; // Nueva suscripción para limpiar
   private route = inject(ActivatedRoute);
-  // Inyectamos los servicios
-  private mascotasService = inject(MascotasService);
-  private mapService = inject(MapService);
+  
+  public mascotasService = inject(MascotasService);
+  public mapService = inject(MapService);
 
   constructor() {
-    // Registramos todos los iconos que usaremos en el mapa
-    addIcons({ 
-      shieldCheckmark, 
-      locate, 
-      layers, 
-      'chevron-back-outline': chevronBackOutline,
-      'paper-plane': paperPlane,
-      'person-outline': personOutline
-    });
+    addIcons({ shieldCheckmark, locate, layers, 'chevron-back-outline': chevronBackOutline, 'paper-plane': paperPlane, 'person-outline': personOutline });
   }
 
-  async ionViewDidEnter() {
-    console.log('🛰️ Motor de Rastreo Real-Time Iniciado');
+  // Usamos ionViewDidEnter para inicializar el mapa CADA VEZ que la vista es activa
+async ionViewDidEnter() {
     
-    // Inicializar el mapa
-    this.mapService.initMap('mapId', [20.6736, -103.344], 15);
 
-    this.cargarDatosIniciales();
-    this.escucharSeleccionMascota();
-    this.startTracking();
+  // 1. Inicializar
+  this.mapService.initMap('mapId', [20.6736, -103.344], 15);
+  const yaRecargado = sessionStorage.getItem('mapa_listo');
 
-    // 3. CAPTURAR EL ID DE LA URL (Query Params)
-    this.route.queryParams.subscribe(params => {
-      const petId = params['petId'];
-      if (petId) {
-        console.log('📍 Buscando mascota desde listado con ID:', petId);
-        this.enfocarMascotaDirecto(petId);
-      }
-    })}
+  if (!yaRecargado) {
+    sessionStorage.setItem('mapa_listo', 'true');
+    console.log('🔄 Forzando recarga de sincronización...');
+    window.location.reload(); // Recarga la página completa
+    return; // Detenemos la ejecución aquí, la página se refrescará
+  }
+
+  // 2. Esperar a que el mapa emita el evento 'load' o pase el tiempo de animación
+  if (this.mapService.map) {
+    this.mapService.map.whenReady(() => {
+      setTimeout(() => {
+        this.mapService.map.invalidateSize();
+        this.cargarDatosIniciales();
+        this.startTracking();
+        this.escucharSeleccionMascota();
+        
+        // Manejar el petId de la URL
+        this.route.queryParams.subscribe(params => {
+          if (params['petId']) {
+            setTimeout(() => this.enfocarMascotaDirecto(params['petId']), 1000);
+          }
+        });
+      }, 500); // 500ms de gracia tras el 'ready'
+    });
+  }
+}
+
+  // IMPORTANTE: Limpiar procesos cuando la pantalla deja de ser la principal
+  ionViewWillLeave() {
+    console.log('🗑️ Limpiando mapa al salir...');
+    this.stopTracking();
+    if (this.seleccionSub) this.seleccionSub.unsubscribe();
+    if (this.routeSub) this.routeSub.unsubscribe();
+    
+    // Si tu MapService tiene una función de limpieza, úsala:
+    if (this.mapService.map) {
+      this.mapService.map.remove();
+      this.mapService.map = null;
+    }
+  }
 
   private cargarDatosIniciales() {
-    const user = JSON.parse(localStorage.getItem('usuario') || '{}');
-    const userId = user.id || user._id;
-    if (userId) {
-      this.mascotasService.cargarMascotasDesdeBD(userId).subscribe();
+    const userStr = localStorage.getItem('usuario');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      const userId = user.id || user._id;
+      if (userId) {
+        // Nos aseguramos de que la carga sea fresca
+        this.mascotasService.cargarMascotasDesdeBD(userId).subscribe();
+      }
     }
   }
 
   private enfocarMascotaDirecto(id: string) {
-    // Damos un tiempo a que el servicio cargue las mascotas de la BD
+    // Esperamos a que los marcadores se dibujen (proceso asíncrono)
     setTimeout(() => {
-      const marker = this.mapService['mascotaMarkers'][id]; // Acceso al diccionario del service
+      const marker = this.mapService.mascotaMarkers[id];
       if (marker) {
         const coords = marker.getLatLng();
-        this.mapService.irAMascota(coords.lat, coords.lng, id); // Pasamos el ID para activar el seguimiento
-      } else {
-        // Si aún no carga, reintentamos una vez más en 1 segundo
-        console.warn('Reintentando localizar marcador...');
+        this.mapService.irAMascota(coords.lat, coords.lng, id);
       }
     }, 1200); 
   }
 
   private escucharSeleccionMascota() {
-    // Si vienes de la lista de mascotas y le diste a "Localizar"
+    if (this.seleccionSub) this.seleccionSub.unsubscribe();
     this.seleccionSub = this.mascotasService.getMascotaSeleccionada().subscribe(pet => {
-      if (pet && pet.lat && pet.lng) {
-        console.log(`🎯 Enfocando a: ${pet.nombre}`);
-        // Pequeño timeout para que Leaflet procese el tamaño del contenedor
+      if (pet?.lat) {
+        // Pequeño delay para dejar que el mapa respire
         setTimeout(() => {
-          this.mapService.irAMascota(pet.lat, pet.lng);
-          // Limpiamos la selección para que no se repita el viaje al re-entrar
+          this.mapService.irAMascota(pet.lat, pet.lng, pet._id);
           this.mascotasService.limpiarSeleccion();
-        }, 700);
+        }, 500);
       }
     });
   }
-async centrar() {
-    // Llamamos al método que acabamos de asegurar en el Service
-    await this.mapService.centrarEnUsuario();
-  }
-  // --- BOTONES DE ACCIÓN ---
 
-  /**
-   * Botón para centrar la cámara en TI (El punto azul)
-   */
   async centrarEnMi() {
     try {
       const position = await Geolocation.getCurrentPosition({ enableHighAccuracy: true });
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
-      
-      this.mapService.actualizarMarcadorUsuario(lat, lng);
-      // El service ya tiene el método para centrar
+      this.mapService.actualizarMarcadorUsuario(position.coords.latitude, position.coords.longitude);
       this.mapService.centrarEnUsuario();
     } catch (e) {
-      console.error('Error al obtener ubicación manual:', e);
+      console.error('Error GPS:', e);
     }
   }
 
-  /**
-   * Botón para fijar la vista en una mascota específica (Si la tienes cargada)
-   */
-  fijarMascota(pet: any) {
-    if (pet && pet.lat) {
-      this.mapService.irAMascota(pet.lat, pet.lng);
-    }
-  }
-
-  // --- CICLO DE VIDA Y GPS ---
-
-  startTracking() {
-    if (navigator.geolocation) {
-      this.watchId = navigator.geolocation.watchPosition(
-        (pos) => {
+  async startTracking() {
+    this.stopTracking(); // Evitar duplicar el watch
+    try {
+      this.watchId = await Geolocation.watchPosition({ 
+        enableHighAccuracy: true,
+        timeout: 5000 
+      }, (pos) => {
+        if (pos) {
           this.mapService.actualizarMarcadorUsuario(pos.coords.latitude, pos.coords.longitude);
-        },
-        (err) => console.error('Error GPS Real-time:', err),
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
-      );
+        }
+      });
+    } catch (e) {
+      console.error("Error iniciando seguimiento:", e);
     }
   }
 
-  stopTracking() {
+  private stopTracking() {
     if (this.watchId) {
-      navigator.geolocation.clearWatch(this.watchId);
+      Geolocation.clearWatch({ id: this.watchId });
       this.watchId = null;
     }
   }
 
-  ionViewWillLeave() {
-    this.detenerServicios();
-  }
-
   ngOnDestroy() {
-    this.detenerServicios();
-  }
-
-  private detenerServicios() {
     this.stopTracking();
     if (this.seleccionSub) this.seleccionSub.unsubscribe();
-    this.mapService.destroyMap();
+    if (this.routeSub) this.routeSub.unsubscribe();
   }
 }
