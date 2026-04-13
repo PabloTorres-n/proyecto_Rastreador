@@ -1,0 +1,289 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="ios">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+
+    <div class="header-logo-container">
+      <img src="assets/splash.png" class="header-logo" alt="Logo App" />
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="light-bg">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content 
+      pullingIcon="chevron-down-circle-outline" 
+      pullingText="Desliza para actualizar"
+      refreshingSpinner="crescent" 
+      refreshingText="Sincronizando con el collar...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <div class="main-container" *ngIf="mascota">
+
+    <div class="profile-header">
+      <div class="avatar-wrapper">
+  <img [src]="mascota?.foto_url || 'https://placedog.net/500'" alt="Mascota" class="pet-img" />
+
+  <div class="status-indicator" [style.background]="obtenerEstadoSenal() === 'en_vivo' ? '#4ade80' : '#94a3b8'">
+    <ion-icon [name]="obtenerEstadoSenal() === 'en_vivo' ? 'flash' : 'flash-off'"></ion-icon>
+  </div>
+
+  <div class="edit-pet-btn" (click)="cambiarFotoMascota()">
+    <ion-icon name="camera"></ion-icon>
+  </div>
+</div>
+      <h2>{{ mascota?.nombre || 'Cargando...' }}</h2>
+      <div class="badge-role">{{ mascota?.especie?.toUpperCase() || 'MASCOTA' }}</div>
+    </div>
+
+    <div class="info-section">
+      <p class="label-group">Estado del Rastreador</p>
+
+      <div class="info-card special-card">
+        <div class="info-item">
+          <div class="icon-box orange-gradient">
+            <ion-icon [name]="(mascota?.bateria < 20) ? 'battery-dead' : 'battery-charging'"></ion-icon>
+          </div>
+          <div class="text-box">
+            <small>Nivel de Energía</small>
+            <p>{{ mascota?.bateria || 0 }}% Batería</p>
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="icon-box green-icon">
+            <ion-icon name="thermometer-outline"></ion-icon>
+          </div>
+          <div class="text-box">
+            <small>Temperatura Ambiente</small>
+            <p [style.color]="mascota?.temperatura > 38 ? '#ef4444' : 'inherit'">
+              {{ mascota?.temperatura || '--' }}°C
+            </p>
+          </div>
+          <ion-badge color="danger" *ngIf="mascota?.temperatura > 38">¡Calor!</ion-badge>
+        </div>
+
+        <div class="info-item no-border">
+          <div class="icon-box blue-icon">
+            <ion-icon name="time-outline"></ion-icon>
+          </div>
+          <div class="text-box">
+            <small>Último reporte GPS</small>
+            <p>{{ mascota?.ultimaActualizacion | date:'dd/MM/yyyy hh:mm a' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="label-group">Estado de Conexión</p>
+
+      <ion-card class="status-card ion-no-margin">
+        <ion-card-content class="ion-no-padding">
+          <div *ngIf="obtenerEstadoSenal() === 'en_vivo'" class="status-box live">
+            <ion-icon name="checkmark-circle"></ion-icon>
+            <div class="status-text">
+              <h2>En línea</h2>
+              <p>Transmitiendo ubicación en tiempo real</p>
+            </div>
+          </div>
+
+          <div *ngIf="obtenerEstadoSenal() === 'sin_gps'" class="status-box warning">
+            <ion-icon name="navigate-outline"></ion-icon>
+            <div class="status-text">
+              <h2>Señal GPS débil</h2>
+              <p>Conectado, pero buscando satélites...</p>
+            </div>
+          </div>
+
+          <div *ngIf="obtenerEstadoSenal() === 'desconectado'" class="status-box danger">
+            <ion-icon name="cloud-offline-outline"></ion-icon>
+            <div class="status-text">
+              <h2>Sin conexión</h2>
+              <p>Último reporte: {{ mascota?.ultimaConexion  | date:'dd/MM/yyyy hh:mm a' }}</p>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <p class="label-group">Coordenadas</p>
+      <div class="info-card" (click)="verEnMapa(mascota)">
+        <div class="info-item no-border">
+          <div class="icon-box orange-icon">
+            <ion-icon name="location"></ion-icon>
+          </div>
+          <div class="text-box">
+            <small>Latitud / Longitud</small>
+            <p>{{ mascota?.lat || '0.000' }}, {{ mascota?.lng || '0.000' }}</p>
+          </div>
+          <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+        </div>
+      </div>
+
+      <p class="label-group">Configuración del Collar</p>
+<div class="info-card" (click)="modalAjustes.present()" style="margin-bottom: 20px; cursor: pointer;">
+  <div class="info-item no-border">
+    <div class="icon-box dark-icon" style="background: #4b5563;">
+      <ion-icon name="settings-outline" style="color: white;"></ion-icon>
+    </div>
+    <div class="text-box">
+      <small>Ajustes del Dispositivo</small>
+      <p>GPS, SOS y Geocerca</p>
+    </div>
+    <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+  </div>
+</div>
+    </div> <div class="device-section">
+      <h3>Dispositivo</h3>
+      <div class="no-device" *ngIf="!mascota?.collarId">
+        <p>Esta mascota aún no tiene un collar vinculado.</p>
+        <ion-button fill="outline" (click)="abrirScannerVinculacion(mascota?._id)">
+          <ion-icon slot="start" name="qr-code-outline"></ion-icon>
+          Vincular Collar
+        </ion-button>
+      </div>
+
+      <div class="device-info" *ngIf="mascota?.collarId">
+        <div class="mac-box">
+          <ion-icon name="hardware-chip-outline"></ion-icon>
+          <span>ID: <strong>{{ mascota?.collarId }}</strong></span>
+        </div>
+        <ion-button color="primary" fill="clear" (click)="abrirScannerVinculacion(mascota?._id)">
+          <ion-icon slot="start" name="sync-outline"></ion-icon>
+          Cambiar Collar
+        </ion-button>
+
+        <ion-button color="danger" fill="outline" style="flex: 1;" (click)="confirmarDesvinculacion()">
+      <ion-icon slot="start" name="trash-outline"></ion-icon>
+      Desvincular
+    </ion-button>
+      </div>
+    </div>
+
+  
+
+    <div class="footer-branding-minimal">
+      <img src="assets/splash.png" alt="Logo App" />
+      <p>Pet Tracker System</p>
+    </div>
+
+  </div> <div *ngIf="!mascota" class="ion-padding ion-text-center" style="margin-top: 50px;">
+    <ion-spinner name="crescent" color="primary"></ion-spinner>
+    <p style="color: var(--text-secondary)">Cargando rastreador...</p>
+  </div>
+<ion-modal #modalAjustes id="modalAjustes" [initialBreakpoint]="0.75" [breakpoints]="[0, 0.75, 1]">
+  <ng-template>
+    <ion-header class="ion-no-border">
+      <ion-toolbar>
+        <ion-title>Ajustes de {{ mascota?.nombre }}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="modalAjustes.dismiss()">Listo</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding">
+      <div class="info-section">
+        
+        <p class="label-group">Seguridad Crítica</p>
+        <div class="info-card" [class.sos-active]="mascota?.sos">
+          <div class="info-item no-border">
+            <div class="icon-box orange-gradient">
+              <ion-icon name="alert-circle"></ion-icon>
+            </div>
+            <div class="text-box">
+              <p>Modo SOS</p>
+              <small>Reporte en tiempo real (5s)</small>
+            </div>
+            <ion-toggle [checked]="mascota?.sos" 
+                        (ionChange)="actualizarConfiguracion({sos: $event.detail.checked})">
+            </ion-toggle>
+          </div>
+        </div>
+
+        <ion-item class="settings-item" style="border-radius: 20px; margin-bottom: 25px; border: 1px solid var(--border-color);">
+    <div class="icon-box blue-icon" slot="start" [style.background]="mascota?.buzzer === 'find' ? 'var(--accent-orange)' : ''">
+      <ion-icon name="volume-high-outline" [style.color]="mascota?.buzzer === 'find' ? 'white' : ''"></ion-icon>
+    </div>
+    <ion-label>
+      <h3 style="font-weight: 800; color: var(--text-main);">Localizar Sonido</h3>
+      <p style="font-size: 0.75rem; color: var(--text-secondary);">El collar emitirá un pitido</p>
+    </ion-label>
+    
+    <ion-button slot="end" fill="solid" 
+                [color]="mascota?.buzzer === 'find' ? 'danger' : 'primary'"
+                style="--border-radius: 12px; font-weight: 700; text-transform: none;"
+                (click)="toggleBuzzer()">
+      {{ mascota?.buzzer === 'find' ? 'Detener' : 'Sonar' }}
+    </ion-button>
+  </ion-item>
+
+        <p class="label-group">Rastreo GPS</p>
+        <div class="info-card">
+          <div class="info-item no-border">
+            <div class="icon-box blue-icon">
+              <ion-icon name="timer-outline"></ion-icon>
+            </div>
+            <div class="text-box">
+              <p>Frecuencia</p>
+              <small>Intervalo de reporte</small>
+            </div>
+            <ion-select [value]="mascota?.intervalo?.toString()" 
+                        (ionChange)="actualizarConfiguracion({intervalo: $event.detail.value})" 
+                        interface="action-sheet"
+                        placeholder="Seleccionar">
+              <ion-select-option value="15000">15 segundos</ion-select-option>
+              <ion-select-option value="30000">30 segundos</ion-select-option>
+              <ion-select-option value="60000">1 minuto</ion-select-option>
+            </ion-select>
+          </div>
+        </div>
+
+        <p class="label-group">Geocerca Virtual</p>
+        <div class="info-card">
+          <div class="info-item">
+            <div class="icon-box orange-icon">
+              <ion-icon name="locate-outline"></ion-icon>
+            </div>
+            <div class="text-box">
+              <p>Perímetro Seguro</p>
+              <small>Activar alerta de salida</small>
+            </div>
+            <ion-toggle [checked]="mascota?.geoActive" 
+                        (ionChange)="actualizarConfiguracion({geoActive: $event.detail.checked})">
+            </ion-toggle>
+          </div>
+
+          <div class="info-item no-border" [class.disabled-item]="!mascota?.geoActive">
+            <div class="icon-box blue-icon">
+              <ion-icon name="radio-button-off-outline"></ion-icon>
+            </div>
+            <div class="text-box">
+              <p>Radio de Alerta</p>
+              <small>(metros)</small>
+            </div>
+            <ion-select [disabled]="!mascota?.geoActive"
+                        [value]="mascota?.geoRadio?.toString()" 
+                        (ionChange)="actualizarConfiguracion({geoRadio: $event.detail.value})" 
+                        interface="popover">
+                        <ion-select-option value="5">5m</ion-select-option>
+              <ion-select-option value="50">50m</ion-select-option>
+              <ion-select-option value="100">100m</ion-select-option>
+              <ion-select-option value="250">250m</ion-select-option>
+            </ion-select>
+          </div>
+
+          <div class="info-item no-border" *ngIf="mascota?.geoActive" style="padding-top: 10px;">
+    <ion-button expand="block" fill="outline" color="primary" style="width: 100%; --border-radius: 12px;" (click)="fijarPuntoSeguro()">
+      <ion-icon name="pin-outline" slot="start"></ion-icon>
+      Fijar centro aquí
+    </ion-button>
+  </div>
+        </div>
+
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+</ion-content>

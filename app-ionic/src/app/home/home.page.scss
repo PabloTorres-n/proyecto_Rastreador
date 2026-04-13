@@ -1,4 +1,4 @@
-/* 1. EL MAPA: Ocupa toda la pantalla */
+/* 1. EL MAPA: Base de la aplicación */
 #mapId {
   position: absolute;
   top: 0;
@@ -6,157 +6,276 @@
   height: 100% !important;
   width: 100% !important;
   z-index: 1;
-  /* Filtro opcional para oscurecer el mapa si el proveedor no tiene versión dark */
-  transition: filter 0.5s ease-in-out;
   background: #eee;
+  transition: filter 0.5s ease-in-out;
 }
 
-
-
-
-/* 2. VARIABLES DINÁMICAS SINCRONIZADAS */
+/* 2. VARIABLES DINÁMICAS (Temas Claro y Oscuro) */
 :host {
-  --accent-color: #231B6B; // Tu Azul Profundo (Modo Claro)
-  --pill-bg: rgba(35, 27, 107, 0.1);
-  --pill-text: #231B6B;
-  --popup-bg: #ffffff;
-  --popup-text: #000000;
+  --accent-color: #231B6B;      // Azul Profundo
+  --btn-grad: linear-gradient(135deg, #231B6B 0%, #4b3bb3 100%);
+  --btn-shadow: rgba(35, 27, 107, 0.4);
+  --modal-bg: #ffffff;
+  --card-bg: #ffffff;           // Gris claro para contraste en cards
+  --text-main: #111111;
+  --text-sub: #7b7b7b;
+  --handle-color: #e0e0e0;
 }
 
 :host-context(body.dark) {
-  --accent-color: #F38430; // Tu Naranja Vibrante (Modo Oscuro)
-  --pill-bg: rgba(243, 132, 48, 0.15);
-  --pill-text: #F38430;
-  --popup-bg: #1a1a1a;
-  --popup-text: #ffffff;
+  --accent-color: #F38430;      // Naranja Vibrante
+  --btn-grad: linear-gradient(135deg, #F38430 0%, #ffac6e 100%);
+  --btn-shadow: rgba(243, 132, 48, 0.4);
+  --modal-bg: #1c1c1e;
+  --card-bg: #2c2c2e;           // Gris oscuro para cards
+  --text-main: #ffffff;
+  --text-sub: #a1a1a1;
+  --handle-color: #48484a;
 
   #mapId {
-    /* Si usas OpenStreetMap estándar, esto lo vuelve oscuro artificialmente */
-    filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
-  }
-
-  ::ng-deep .leaflet-popup-pane {
-    filter: none !important;
+    /* Filtro para oscurecer mapas estándar como OpenStreetMap */
+   
   }
 }
 
-/* 3. OVERLAYS (Botones y Status) */
-.top-overlay {
+/* 3. HEADER SUPERIOR IZQUIERDO (Logo + Status) */
+.top-right-container {
   position: fixed;
   top: calc(env(safe-area-inset-top) + 15px);
-  left: 15px;
+  right: 15px; 
   z-index: 1000;
-  pointer-events: none;
+}
+
+.logo-box {
+  background: rgba(255, 255, 255, 0.85); // Fondo tipo cristal
+  padding: 10px 14px;
+  border-radius: 24px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .app-logo {
+    height: 55px; // Tamaño grande y visible
+    width: auto;
+    object-fit: contain;
+  }
 }
 
 .status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 16px;
-  background: var(--pill-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--pill-text);
+  background: var(--accent-color) !important;
+  color: white !important;
+  padding: 6px 14px;
   border-radius: 50px;
-  color: var(--pill-text);
-  font-size: 13px;
-  font-weight: 700;
-  pointer-events: auto;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
-  transition: all 0.3s ease;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 
-  .pulse-dot, .pulse-dot::after {
-    width: 8px;
-    height: 8px;
-    background-color: #2dd36f; // Verde online siempre
+  .pulse-dot {
+    width: 7px;
+    height: 7px;
+    background: #2dd36f;
     border-radius: 50%;
-  }
-
-  .pulse-dot::after {
-    content: '';
-    position: absolute;
-    animation: ripple 2s infinite;
+    box-shadow: 0 0 8px #2dd36f;
+    animation: pulse-animation 2s infinite;
   }
 }
 
+/* 4. MODAL (Bottom Sheet) */
+ion-modal {
+  --border-radius: 32px 32px 0 0;
+  --box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.2);
+  --z-index: 99999;
+  --background: var(--modal-bg);
+
+  &::part(content) {
+    background: var(--modal-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  &::part(backdrop) {
+    backdrop-filter: blur(6px);
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+}
+
+.mascota-detalle {
+  .header-modal {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 900;
+      margin: 0;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
+    }
+  }
+}
+
+/* Badge En Línea (Dentro del modal) */
+.status-badge-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #2dd36f !important;
+  color: white !important;
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 10px;
+  font-weight: 900;
+  box-shadow: 0 4px 10px rgba(45, 211, 111, 0.3);
+
+  .status-dot-online {
+    width: 7px; height: 7px;
+    background: white;
+    border-radius: 50%;
+  }
+}
+
+/* 5. GRID DE INFORMACIÓN (Cards) */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 20px 0;
+
+  .info-card {
+    background: var(--card-bg);
+    padding: 15px;
+    border-radius: 22px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid rgba(0,0,0,0.02);
+
+    .info-val {
+      display: flex;
+      flex-direction: column;
+      .label { font-size: 9px; color: var(--text-sub); text-transform: uppercase; font-weight: 700; }
+      .value { font-size: 16px; font-weight: 800; color: var(--text-main); }
+    }
+  }
+}
+
+/* 6. BOTONERA (Alta Presencia) */
+.button-group {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+
+  .btn-perfil {
+    --background: var(--card-bg);
+    --color: var(--accent-color);
+    --border-radius: 20px;
+    height: 65px;
+    width: 65px;
+    margin: 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    border:2px solid #F38430;
+    border-radius: 19px;  
+    color: #F38430;  ;
+    
+    ion-icon { font-size: 32px; }
+    &:active { transform: scale(0.95); }
+  }
+
+  .btn-ir-ahora {
+    flex: 1;
+    height: 65px;
+    margin: 0;
+    --border-radius: 20px;
+    --background: var(--btn-grad) !important;
+    --color: #ffffff !important;
+    --box-shadow: 0 10px 20px var(--btn-shadow);
+    font-weight: 800;
+    font-size: 1.2rem;
+     // Naranja Vibrante
+    border: 2px solid #F38430;  
+    border-radius: 19px;
+    color: #F38430;  ;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    &:active {
+      transform: translateY(2px);
+      --box-shadow: 0 4px 8px var(--btn-shadow);
+    }
+  }
+}
+
+/* 7. OVERLAY INFERIOR (Botón GPS) */
 .bottom-overlay {
   position: fixed;
   bottom: calc(env(safe-area-inset-bottom) + 110px);
   right: 20px;
   z-index: 1000;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  &.modal-abierto {
+    transform: translateY(-42vh); // Sube cuando el modal está abierto
+  }
   
   ion-fab-button {
     --background: var(--accent-color);
     --color: #ffffff;
-    --box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-    transition: --background 0.3s ease;
+    --box-shadow: 0 8px 20px rgba(0,0,0,0.3);
   }
 }
 
-/* 4. IONIC FIXES */
-ion-content {
-  --background: #000000 !important; // Fondo base negro para evitar flash blanco
-  --overflow: hidden;
-}
-
-@keyframes ripple {
-  0% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(3.5); opacity: 0; }
-}
-
-/* 5. PARCHES DE LEAFLET (Inyectados) */
+/* 8. CORRECCIONES Y ANIMACIONES */
+/* 8. CORRECCIONES Y ANIMACIONES */
 ::ng-deep {
-  .modern-popup-wrapper .leaflet-popup-content-wrapper {
-    background: var(--popup-bg) !important;
-    color: var(--popup-text) !important;
-    border: 2px solid var(--accent-color) !important;
-    border-radius: 16px;
-    padding: 0;
-    overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2) !important;
+  .ion-modal-handle {
+    background: var(--handle-color) !important;
+    width: 45px !important;
+    height: 5px !important;
   }
 
-  .modern-popup-wrapper .leaflet-popup-tip {
-    background: var(--accent-color) !important;
+  /* 1. Forzar que el contenedor de dibujos sea visible y esté al frente */
+  .leaflet-overlay-pane {
+    z-index: 600 !important; /* Por encima de las calles, debajo de los botones */
   }
 
-  .btn-popup-action {
-    background: var(--accent-color) !important;
-    color: #ffffff !important;
-    border: none !important;
-    font-size: 14px !important;
-    font-weight: 800 !important;
-    padding: 14px !important;
-    width: 100% !important;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    
-    &:active {
-      filter: brightness(0);
-    }
+  /* 2. Estilo específico para la GEOCERCA (Círculos) */
+  path.leaflet-interactive[fill] {
+    stroke: #f97316 !important; /* Naranja siempre visible */
+    stroke-width: 3px !important;
+    stroke-dasharray: 5, 10 !important; /* Rayas largas */
+    fill: #f97316 !important;
+    fill-opacity: 0.3 !important;
+    stroke-opacity: 1 !important;
   }
 
-  /* RUTA (Puntos entre tú y la mascota) */
-  path.leaflet-interactive {
+  /* 3. Estilo específico para la RUTA (Líneas) */
+  /* Solo aplicamos el estilo de puntitos si no tienen relleno (fill="none") */
+  path.leaflet-interactive:not([fill]), 
+  path.leaflet-interactive[fill="none"] {
     stroke: var(--accent-color) !important;
-    stroke-width: 5px !important;
-    stroke-opacity: 0.8 !important;
-    stroke-dasharray: 1, 12;
-    stroke-linecap: round;
+    stroke-width: 6px !important;
+    stroke-dasharray: 1, 15 !important;
+    stroke-linecap: round !important;
   }
 }
-/* Forzar que los marcadores se redibujen siempre arriba y de forma independiente */
-.leaflet-marker-pane {
-  z-index: 999 !important;
-  pointer-events: none; /* Que el panel no bloquee el mapa */
+
+@keyframes pulse-animation {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(45, 211, 111, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(45, 211, 111, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(45, 211, 111, 0); }
 }
 
-.leaflet-marker-icon {
-  pointer-events: auto !important; /* Pero que el icono SI reciba clics */
-  transition: transform 0.2s linear; /* Suaviza el movimiento del socket */
-}
-
-.leaflet-overlay-pane {
-  z-index: 500 !important; /* La ruta siempre abajo */
+ion-content {
+  --background: #000; // Evita el flash blanco al cargar
 }

@@ -27,6 +27,10 @@ export const routes: Routes = [
     loadComponent: () => import('./home/home.page').then(m => m.HomePage),
     canActivate: [authGuard] 
   },
+  {
+  path: 'mis-collares',
+  loadComponent: () => import('./mis-collares/mis-collares.component').then(m => m.MisCollaresComponent)
+},
   { 
     path: 'mapa', 
     loadComponent: () => import('./mapa/mapa.page').then(m => m.MapaPage),
@@ -51,5 +55,9 @@ export const routes: Routes = [
     path: 'tienda',
     loadComponent: () => import('./tienda/tienda.page').then( m => m.TiendaPage),
     canActivate: [authGuard]
+  },
+  {
+    path: 'perfil-mascota/:id', // EL :id ES VITAL
+    loadComponent: () => import('./perfil-mascota/perfil-mascota.component').then(m => m.PerfilMascotaComponent)
   }
 ];

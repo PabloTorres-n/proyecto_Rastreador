@@ -1,0 +1,679 @@
+:host {
+  // VARIABLES MODO CLARO (Default)
+  --bg-page: #f4f7ff; 
+  --card-bg: #ffffff;
+  --text-main: #231b6b;        // Tu Azul Profundo
+  --text-secondary: #64748b;
+  --accent-orange: #f38430;    // Tu Naranja
+  --border-color: #e2e8f0;
+  --badge-bg: #eef2ff;
+  display: block;
+  height: 100%;
+}
+
+// DETECTA EL MODO OSCURO
+:host-context(body.dark) {
+  --bg-page: #000000;          // Negro puro
+  --card-bg: #1a1a1a;          // Gris oscuro
+  --text-main: #ffffff;        // Blanco
+  --text-secondary: #a1a1aa; 
+  --border-color: #2d2d2d;
+  --badge-bg: #231b6b;         // Azul oscuro en fondo negro
+}
+
+.light-bg {
+  --background: var(--bg-page) !important;
+}
+
+.main-container {
+  padding: 20px;
+  padding-bottom: 40px;
+}
+
+// --- SECCIÓN SUPERIOR (AVATAR) ---
+.profile-header {
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 30px;
+
+  .avatar-wrapper {
+    position: relative;
+    width: 115px;
+    margin: 0 auto 15px;
+    
+  height: 115px;
+
+    .pet-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 40px; // Estilo más moderno para mascotas (cuadrado redondeado)
+    border: 4px solid white;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  }
+
+  // Indicador de señal arriba a la derecha
+  .status-indicator {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border: 3px solid white;
+    font-size: 16px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  // Botón de cámara abajo a la derecha
+  .edit-pet-btn {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    background: #231b6b;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid white;
+    font-size: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    cursor: pointer;
+
+    &:active { transform: scale(0.9); }
+  }
+  }
+
+  h2 {
+    color: var(--text-main);
+    font-weight: 800;
+    margin: 0;
+    font-size: 1.6rem;
+    letter-spacing: -0.5px;
+  }
+
+  .badge-role {
+    display: inline-block;
+    background: var(--badge-bg);
+    color: var(--text-main);
+    padding: 6px 16px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    margin-top: 10px;
+    letter-spacing: 1px;
+    border: 1px solid rgba(35, 27, 107, 0.05);
+  }
+}
+
+// --- SECCIONES DE INFORMACIÓN ---
+.info-section {
+  margin-bottom: 20px;
+
+  .label-group {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-left: 10px;
+    margin-bottom: 12px;
+    letter-spacing: 1.2px;
+  }
+
+  .info-card {
+    background: var(--card-bg);
+    border-radius: 28px;
+    padding: 4px 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+    margin-bottom: 25px;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+
+    &.special-card {
+      border: 1px solid rgba(243, 132, 48, 0.15);
+      background: linear-gradient(135deg, var(--card-bg), var(--card-bg));
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border-color);
+      cursor: pointer;
+
+      &:active {
+        opacity: 0.7;
+      }
+
+      &.no-border { border-bottom: none; }
+
+      .icon-box {
+        width: 46px;
+        height: 46px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 16px;
+        
+        &.blue-icon {
+          background: var(--badge-bg);
+          ion-icon { color: var(--text-main); }
+        }
+
+        &.orange-gradient {
+          background: linear-gradient(135deg, var(--accent-orange), #ff9f59);
+          box-shadow: 0 6px 15px rgba(243, 132, 48, 0.25);
+          ion-icon { color: white; }
+        }
+
+        &.orange-icon {
+          background: rgba(243, 132, 48, 0.1);
+          ion-icon { color: var(--accent-orange); }
+        }
+
+        ion-icon { font-size: 1.4rem; }
+      }
+
+      .text-box {
+        flex: 1;
+        small {
+          display: block;
+          color: var(--text-secondary);
+          font-size: 0.7rem;
+          font-weight: 600;
+          margin-bottom: 2px;
+        }
+        p {
+          margin: 0;
+          color: var(--text-main);
+          font-weight: 700;
+          font-size: 1rem;
+        }
+      }
+
+      .arrow-icon {
+        color: var(--text-secondary);
+        font-size: 1.4rem;
+        opacity: 0.4;
+      }
+    }
+  }
+}
+
+// --- BOTÓN DE CIERRE/ACCIÓN ---
+.logout-button {
+  --color: var(--text-secondary);
+  --padding-top: 20px;
+  --padding-bottom: 20px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-transform: none;
+  margin-top: 5px;
+  
+  ion-icon {
+    margin-right: 8px;
+    font-size: 1.2rem;
+  }
+
+  &:active {
+    --color: var(--accent-orange);
+  }
+}
+
+// ANIMACIÓN DE ENTRADA
+.main-container {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// --- SECCIÓN DE DISPOSITIVO (NUEVA) ---
+.device-section {
+  margin-bottom: 30px;
+
+  h3 {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-left: 10px;
+    margin-bottom: 12px;
+    letter-spacing: 1.2px;
+  }
+
+  // Contenedor principal estilo Info-Card
+  .no-device, .device-info {
+    background: var(--card-bg);
+    border-radius: 28px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.03);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+  }
+
+  // Estado: Sin dispositivo
+  .no-device {
+    p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 15px;
+      font-weight: 500;
+    }
+
+    ion-button {
+      --border-radius: 14px;
+      --color: var(--accent-orange);
+      --border-color: var(--accent-orange);
+      font-weight: 700;
+      text-transform: none;
+      height: 45px;
+    }
+  }
+
+  // Estado: Con dispositivo vinculado
+  .device-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+
+    .mac-box {
+      background: var(--badge-bg);
+      padding: 12px 20px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid rgba(35, 27, 107, 0.05);
+
+      ion-icon {
+        color: var(--text-main);
+        font-size: 1.5rem;
+      }
+
+      span {
+        color: var(--text-main);
+        font-family: 'Monaco', 'Courier New', monospace;
+        font-weight: 700;
+        font-size: 0.95rem;
+      }
+    }
+
+    ion-button {
+      --color: #ff4961; // Rojo suave para la acción de cambiar
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: none;
+    }
+  }
+}
+
+// Adaptación para Modo Oscuro automática por el uso de variables
+:host-context(body.dark) {
+  .device-section {
+    .mac-box {
+      background: #231b6b; // Reforzamos el azul profundo en dark mode
+    }
+  }
+}
+ion-toolbar {
+  --background: #f4f7ff;
+  display: flex;
+  align-items: center;
+}
+
+.header-logo-container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: -1; // Esto permite que los botones laterales funcionen
+  
+  .header-logo {
+    height: 40px; // Ajusta según el tamaño de tu logo
+    width: auto;
+    object-fit: contain;
+  }
+}
+
+// Estilo extra para el contenedor principal
+.main-container {
+  padding: 20px;
+  padding-bottom: 40px;
+}
+/* Logo en el Header */
+.header-logo-container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: -1; // Importante para no bloquear los botones de atrás/notificaciones
+  
+  .header-logo {
+    height: 24px; // Un poco más pequeño que en la lista
+    width: auto;
+    opacity: 0.8;
+  }
+}
+
+/* Marca de agua al final */
+.footer-branding-minimal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+  padding-bottom: 20px;
+  
+  
+  img {
+    width: 35px;
+    
+    margin-bottom: 5px;
+  }
+  
+  p {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #444;
+  }
+}
+// --- NUEVO ESTILO DE TARJETA DE ESTADO ---
+.status-card {
+  margin: 10px 0 25px 0; // Alineado con tus otros márgenes
+  border-radius: 28px;   // Mismo radio que tus info-cards
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+
+  .status-box {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    gap: 18px;
+    position: relative;
+
+    // Indicador lateral sutil (opcional, puedes quitarlo si quieres minimalismo puro)
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 20%;
+      height: 60%;
+      width: 4px;
+      border-radius: 0 4px 4px 0;
+    }
+
+    ion-icon {
+      font-size: 2.2rem;
+      padding: 10px;
+      border-radius: 18px;
+    }
+
+    .status-text {
+      h2 {
+        margin: 0;
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: var(--text-main);
+        letter-spacing: -0.3px;
+      }
+      p {
+        margin: 3px 0 0 0;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+      }
+    }
+  }
+
+  // --- VARIANTES MODERNAS ---
+
+  // 1. EN VIVO (Verde)
+  .status-box.live {
+    &::before { background: #4ade80; }
+    ion-icon { 
+      background: rgba(74, 222, 128, 0.1); 
+      color: #4ade80;
+      animation: pulse-soft 2s infinite;
+    }
+  }
+
+  // 2. BUSCANDO GPS (Naranja/Amarillo)
+  .status-box.warning {
+    &::before { background: var(--accent-orange); }
+    ion-icon { 
+      background: rgba(243, 132, 48, 0.1); 
+      color: var(--accent-orange);
+      animation: rotate-slow 4s infinite linear;
+    }
+  }
+
+  // 3. DESCONECTADO (Rojo/Gris)
+  .status-box.danger {
+    &::before { background: #ff4961; }
+    ion-icon { 
+      background: rgba(255, 73, 97, 0.1); 
+      color: #ff4961;
+    }
+    h2 { color: #ff4961; } // Texto en rojo para alertar más
+  }
+}
+
+// ANIMACIONES SUAVES
+@keyframes pulse-soft {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes rotate-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* --- ANIMACIONES --- */
+
+@keyframes pulse-green {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes rotate-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Ajuste para que se vea bien en modo oscuro si lo usas */
+@media (prefers-color-scheme: dark) {
+  .status-box.live { background: #1a2e1f; }
+  .status-box.warning { background: #2e2a1a; }
+  .status-box.danger { background: #2e1a1a; }
+  
+  .status-box p { color: #ccc; }
+}
+
+// --- ESTILO ESPECÍFICO PARA EL MODAL DE AJUSTES ---
+// --- ESTILO RENOVADO: MÁS NARANJAS Y AZULES ---
+
+
+
+// Animación de pulso Naranja para SOS
+
+
+// Soporte para Modo Oscuro (Mantiene contraste Azules/Naranjas)
+// --- ESTILO PREMIUM: AZUL PROFUNDO & NARANJA ACCENT ---
+
+::ng-deep {
+  ion-modal#modalAjustes {
+    --border-radius: 32px 32px 0 0;
+    --box-shadow: 0 -10px 40px rgba(35, 27, 107, 0.2);
+
+    ion-toolbar {
+      // Header en tu Azul Profundo
+      --background: #231b6b; 
+      --color: #ffffff;
+      --padding-top: 12px;
+      --padding-bottom: 8px;
+      
+      ion-title {
+        font-weight: 800;
+        font-size: 1.1rem;
+        letter-spacing: -0.5px;
+        text-align: center;
+      }
+
+      ion-button {
+        // Botón "Cerrar" en tu Naranja
+        background-color: #f38430;
+        --color: #fbfbfb; 
+        font-weight: 800;
+        border-radius: 12px;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+      }
+    }
+
+    ion-content {
+      --background: #f4f7ff; // Tu bg-page
+      
+      .info-section {
+        padding: 15px;
+
+        .label-group {
+          font-size: 0.7rem;
+          color: #231b6b; // Azul Profundo para títulos de sección
+          font-weight: 800;
+          text-transform: uppercase;
+          margin: 10px 0 15px 10px;
+          letter-spacing: 1.5px;
+        }
+
+        .info-card {
+          background: #ffffff; // Tu card-bg
+          border-radius: 24px;
+          padding: 8px 16px;
+          margin-bottom: 20px;
+          border: 1px solid #e2e8f0; // Tu border-color
+          box-shadow: 0 8px 20px rgba(35, 27, 107, 0.04);
+
+          // EFECTO SOS NARANJA
+          &.sos-active {
+            background: #fff8f4; // Blanco con un toque naranja
+            border: 1px solid rgba(243, 130, 48, 0.3);
+            animation: pulse-orange 2s infinite;
+
+            .icon-box {
+              background: #f38430 !important;
+              ion-icon { color: #ffffff !important; }
+            }
+          }
+
+          .info-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #e2e8f0;
+
+            &.no-border { border-bottom: none; }
+
+            .icon-box {
+              width: 42px;
+              height: 42px;
+              border-radius: 14px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              margin-right: 14px;
+
+              // Iconos en Azul Profundo por defecto
+              background: #eef2ff; // Tu badge-bg
+              ion-icon { 
+                color: #231b6b; 
+                font-size: 1.3rem;
+              }
+
+              // Variante para iconos naranjas
+              &.orange-variant {
+                background: rgba(243, 132, 48, 0.1);
+                ion-icon { color: #f38430; }
+              }
+            }
+
+            .text-box {
+              flex: 1;
+              p {
+                margin: 0;
+                font-weight: 700;
+                color: #231b6b; // Texto principal
+                font-size: 0.95rem;
+              }
+              small {
+                color: #64748b; // Tu text-secondary
+                font-size: 0.75rem;
+                font-weight: 600;
+              }
+            }
+
+            // --- CONTROLES PERSONALIZADOS ---
+            
+            ion-toggle {
+              --handle-background-checked: #ffffff;
+              --track-background-checked: #f38430; // Toggle activa en Naranja
+            }
+
+            ion-select {
+              // El select parece un botón premium Azul
+              background: #231b6b;
+              color: #ffffff;
+              --placeholder-color: #ffffff;
+              --placeholder-opacity: 1;
+              border-radius: 12px;
+              font-weight: 700;
+              font-size: 0.8rem;
+              padding: 3px 10px;
+              box-shadow: 0 4px 10px rgba(35, 27, 107, 0.2);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Animación de advertencia SOS
+@keyframes pulse-orange {
+  0% { box-shadow: 0 0 0 0 rgba(243, 132, 48, 0.2); }
+  70% { box-shadow: 0 0 0 10px rgba(243, 132, 48, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(243, 132, 48, 0); }
+}
+
+// Ajuste para el estado SOS cuando está activo
+.settings-item[style*="background"] {
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.1);
+}

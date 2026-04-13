@@ -16,4 +16,5 @@ router.post('/login', [
     check('contrasena', 'La contraseña es requerida').notEmpty()
 ], authController.login); // Solo llamamos a la función
 
+router.put('/clientes/cambiar-password/:idUsuario', authController.cambiarPassword);
 module.exports = router;

@@ -2,18 +2,78 @@
   
   <div id="mapId"></div>
 
-<div class="top-overlay">
-  <div class="status-pill">
-    <div class="pulse-dot"></div>
-    <ion-icon name="shield-checkmark"></ion-icon>
-    <span>Sistema Activo</span>
+  <div class="top-right-container">
+    <div class="brand-group">
+      <div class="logo-box">
+        <img src="./assets/splash.png" alt="Logo" class="app-logo">
+      </div>
+    </div>
   </div>
-</div>
 
-  <div class="bottom-overlay">
+  <div class="bottom-overlay" [class.modal-abierto]="mostrarDetalle">
     <ion-fab-button (click)="centrarEnMi()">
-      <ion-icon name="locate">boton</ion-icon>
+      <ion-icon name="locate"></ion-icon>
     </ion-fab-button>
   </div>
+
+  <ion-modal [isOpen]="mostrarDetalle" 
+             [breakpoints]="[0, 0.50]" 
+             [initialBreakpoint]="0.50" 
+             [handle]="true"
+             (didDismiss)="mostrarDetalle = false">
+    <ng-template>
+      <ion-content class="ion-padding" style="--background: var(--modal-bg)">
+        <div class="mascota-detalle" *ngIf="mascotaSeleccionada">
+          
+          <div class="header-modal">
+            <div class="title-group">
+              <h2>{{ mascotaSeleccionada.nombre }}</h2>
+              <p style="color: var(--text-sub); margin-top: 4px; font-size: 0.8rem;">
+                <ion-icon name="time-outline"></ion-icon> 
+                Visto: {{ mascotaSeleccionada.ultimaActualizacion | date:'shortTime' }}
+              </p>
+            </div>
+
+            <div class="status-badge-container" [ngClass]="obtenerEstadoSenal(mascotaSeleccionada)">
+              <span class="status-dot"></span>
+              {{ obtenerEstadoSenal(mascotaSeleccionada).replace('_', ' ').toUpperCase() }}
+            </div>
+          </div>
+
+          <div class="info-grid">
+            <div class="info-card">
+              <ion-icon [name]="mascotaSeleccionada.bateria < 20 ? 'battery-dead' : 'battery-charging'" 
+                        [color]="mascotaSeleccionada.bateria < 20 ? 'danger' : 'success'"></ion-icon>
+              <div class="info-val">
+                <span class="label">Energía</span>
+                <span class="value">{{ mascotaSeleccionada.bateria }}%</span>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <ion-icon name="map-outline" color="primary"></ion-icon>
+              <div class="info-val">
+                <span class="label">Distancia</span>
+                <span class="value">{{ distanciaReal }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="button-group">
+            <ion-button fill="clear" class="btn-perfil" (click)="irAlPerfil()">
+              <ion-icon name="paw"></ion-icon>
+              <span style="margin-left: 8px; font-weight: 600;">PERFIL</span>
+            </ion-button>
+
+            <ion-button expand="block" class="btn-ir-ahora" (click)="trazarRutaAMascota()">
+              <ion-icon name="navigate" slot="start"></ion-icon>
+              IR AHORA
+            </ion-button>
+          </div>
+
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 
 </ion-content>

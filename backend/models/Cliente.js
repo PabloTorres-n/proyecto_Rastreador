@@ -14,12 +14,23 @@ const clienteSchema = new mongoose.Schema({
     ciudad: String,
     direccion: String
   },
+  pushToken: { type: String, default: null },
   configuracion: {
     notificaciones_push: { type: Boolean, default: true },
     idioma: { type: String, default: 'es' }
   },
+   foto_url: { type: String, default: null },
+  telefono:{type: String},
+  direccion: {
+        ciudad: { type: String, default: "" },
+        pais: { type: String, default: "" },
+        colonia: { type: String, default: "" },
+        cpp: { type: String, default: "" }, // Código Postal
+        calle: { type: String, default: "" }
+    },
   fecha_creacion: { type: Date, default: Date.now }
 });
+
 
 // FUNCIÓN PARA GENERAR EL TOKEN
 clienteSchema.methods.generateAuthToken = function() {

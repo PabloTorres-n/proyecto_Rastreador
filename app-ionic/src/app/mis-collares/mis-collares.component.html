@@ -1,0 +1,94 @@
+<ion-header [translucent]="true" class="ion-no-border">
+  <ion-toolbar class="transparent-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/perfil" color="primary" text=""></ion-back-button>
+    </ion-buttons>
+    <div class="header-logo-container">
+      <img src="assets/splash.png" class="header-logo" alt="logo">
+    </div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="light-bg">
+  <div class="main-container">
+    
+    <div class="profile-header">
+      <div class="avatar-wrapper">
+        <div class="icon-circle-bg">
+          <ion-icon name="hardware-chip"></ion-icon>
+        </div>
+      </div>
+      <h2>Mis Dispositivos</h2>
+      <span class="badge-role">HARDWARE TRACKER</span>
+    </div>
+
+    <div *ngIf="cargando" class="ion-text-center ion-padding loader-container">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+      <p>Sincronizando con el servidor...</p>
+    </div>
+
+    <div class="info-section" *ngIf="!cargando">
+      <p class="label-group">Inventario de Collares ({{ dispositivos.length }})</p>
+
+      <div class="empty-state" *ngIf="dispositivos.length === 0">
+        <ion-icon name="cloud-offline-outline"></ion-icon>
+        <p>No tienes dispositivos registrados en tu cuenta.</p>
+      </div>
+
+      <div class="info-card special-card" *ngFor="let collar of dispositivos">
+        
+        <div class="info-item">
+          <div class="icon-box orange-gradient">
+            <ion-icon name="hardware-chip"></ion-icon>
+          </div>
+          <div class="text-box">
+            <small>Apodo del Collar</small>
+            <p>{{ collar.apodo || 'Collar Genérico' }}</p>
+          </div>
+          <div class="status-pill" [class.online]="collar.mascotaActual">
+            {{ collar.mascotaActual ? 'ASIGNADO' : 'EN STOCK' }}
+          </div>
+        </div>
+
+        <div class="technical-dashboard">
+          <div class="data-node">
+            <ion-icon name="battery-charging" [style.color]="getBateriaColor(collar.bateria)"></ion-icon>
+            <span class="val">{{ collar.bateria }}%</span>
+            <span class="lab">Energía</span>
+          </div>
+          
+          <div class="data-node side-borders">
+            <ion-icon name="paw" class="blue-icon-text"></ion-icon>
+            <span class="val">{{ collar.mascotaActual?.nombre || 'Libre' }}</span>
+            <span class="lab">Mascota</span>
+          </div>
+          
+          <div class="data-node">
+            <ion-icon name="time-outline"></ion-icon>
+            <span class="val">{{ formatFecha(collar.ultimaConexion) }}</span>
+            <span class="lab">Último Pulso</span>
+          </div>
+        </div>
+
+        <div class="info-item no-border">
+          <div class="icon-box blue-icon">
+            <ion-icon name="code-working"></ion-icon>
+          </div>
+          <div class="text-box">
+            <small>Dirección MAC / Serial</small>
+            <p class="mac-address">{{ collar.collarId }}</p>
+          </div>
+          <ion-button fill="clear" color="medium" (click)="abrirAjustesCollar(collar)">
+            <ion-icon name="settings-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-branding-minimal">
+      <img src="assets/splash.png" alt="logo">
+      <p>Tracker Pro System v1.2</p>
+    </div>
+
+  </div>
+</ion-content>

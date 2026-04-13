@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MascotasService } from '../services/mascotas'; 
+import { RouterModule } from '@angular/router';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common'; // Necesario para decimal pipes y ngFor
 
@@ -18,7 +19,7 @@ import {
   navigateCircle, 
   pawOutline, 
   locationOutline,
-  addCircleOutline,paperPlane,personOutline
+  addCircleOutline,paperPlane,personOutline,trailSignOutline
 
 } from 'ionicons/icons';
 
@@ -33,7 +34,8 @@ import {
     IonHeader, IonToolbar, IonTitle, IonButtons, 
     IonContent, IonCard, IonItem, IonAvatar, 
     IonLabel, IonBadge, IonIcon, IonButton, 
-    IonCardContent,
+    IonCardContent,RouterModule,
+    RouterModule
   ]
 })
 export class MascotasComponent implements OnInit {
@@ -52,7 +54,7 @@ export class MascotasComponent implements OnInit {
       pawOutline, 
       locationOutline,
       addCircleOutline,
-      paperPlane,personOutline
+      paperPlane,personOutline,trailSignOutline
     });
   }
 
@@ -84,5 +86,10 @@ ngOnInit() {
   this.router.navigate(['/home'], { 
     queryParams: { petId: pet._id } 
   });
+}
+
+irAlPerfil(id: string) {
+  console.log('Navegando a la mascota con ID:', id); // Si esto no sale en consola, el botón no está detectando el clic
+  this.router.navigate(['/perfil-mascota', id]);
 }
 }

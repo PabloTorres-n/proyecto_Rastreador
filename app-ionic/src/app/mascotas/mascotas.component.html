@@ -14,20 +14,29 @@
     <div *ngFor="let pet of mascotas" class="pet-item">
       
       <div class="info-row">
-        <div class="avatar-minimal">{{ pet.nombre[0] }}</div>
-        <div class="text-group">
-          <span class="name">{{ pet.nombre }}</span>
-          <span class="species">{{ pet.especie }}</span>
-        </div>
-        
-        <div class="battery-mini" [class.low]="pet.bateria < 20">
-          <ion-icon [name]="pet.bateria < 20 ? 'battery-dead' : 'battery-charging'"></ion-icon>
-          {{ pet.bateria }}%
-        </div>
-      </div>
+  <div class="avatar-list-wrapper">
+    <img [src]="pet.foto_url || 'https://placedog.net/500'" 
+         alt="Mascota" 
+         class="pet-avatar-img" />
+  </div>
+
+  <div class="text-group">
+    <span class="name">{{ pet.nombre }}</span>
+    <span class="species">{{ pet.especie }}</span>
+  </div>
+  
+  <div *ngIf="pet.collarId" class="battery-mini" [class.low]="pet.bateria < 20">
+    <ion-icon [name]="pet.bateria < 20 ? 'battery-dead' : 'battery-charging'"></ion-icon>
+    {{ pet.bateria }}%
+  </div>
+
+  <div *ngIf="!pet.collarId" class="no-collar-label">
+    Sin collar
+  </div>
+</div>
 
       <div class="action-row">
-        <button class="btn-profile-ghost" >
+        <button class="btn-profile-ghost" (click)="irAlPerfil(pet._id)" >
           <ion-icon name="person-outline"></ion-icon>
           Ver Perfil
         </button>
@@ -38,5 +47,10 @@
       </div>
 
     </div>
+  </div>
+  <div class="list-footer-branding">
+    <img src="assets/splash.png" alt="Logo App" />
+    <p>Tracker System</p>
+    <small>Zapopan, MX</small>
   </div>
 </ion-content>

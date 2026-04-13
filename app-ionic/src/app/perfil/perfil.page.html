@@ -1,14 +1,19 @@
 <ion-content class="light-bg">
-  <div class="main-container">
+  <div class="main-container" *ngIf="usuario; else loading">
     
     <div class="profile-header">
-      <div class="avatar-wrapper">
-        <img src="https://ui-avatars.com/api/?name=Juan+Perez&background=eef2ff&color=231b6b" alt="Avatar" />
-        <div class="edit-btn">
-          <ion-icon name="camera"></ion-icon>
-        </div>
-      </div>
-      <h2>Juan Pérez</h2>
+    <div class="avatar-wrapper">
+  <img *ngIf="usuario.foto_url" [src]="usuario.foto_url" alt="Avatar" class="profile-img" />
+  
+  <img *ngIf="!usuario.foto_url" 
+       [src]="'https://ui-avatars.com/api/?name=' + usuario.nombre + '&background=eef2ff&color=231b6b'" 
+       alt="Avatar" />
+
+  <div class="edit-btn" (click)="cambiarFoto()">
+    <ion-icon name="camera"></ion-icon>
+  </div>
+</div>
+      <h2>{{ usuario.nombre }}</h2>
       <span class="badge-role">CLIENTE VERIFICADO</span>
     </div>
 
@@ -22,7 +27,7 @@
           </div>
           <div class="text-box">
             <small>Email</small>
-            <p>juan.perez@example.com</p>
+            <p>{{ usuario.correo }}</p>
           </div>
         </div>
 
@@ -32,7 +37,7 @@
           </div>
           <div class="text-box">
             <small>Teléfono</small>
-            <p>+52 33 1234 5678</p>
+            <p>{{ usuario.telefono || 'No registrado' }}</p>
           </div>
         </div>
 
@@ -42,50 +47,31 @@
           </div>
           <div class="text-box">
             <small>Ubicación</small>
-            <p>Guadalajara, Jalisco</p>
+            <p>{{usuario.direccion.ciudad}} {{usuario.direccion.pais }}</p>
           </div>
         </div>
       </div>
 
-      <!-- <p class="label-group">Plan y Servicios</p>
-      <div class="info-card special-card">
-        <div class="info-item no-border">
-          <div class="icon-box orange-gradient">
-            <ion-icon name="ribbon-outline" style="color: white;"></ion-icon>
-          </div>
-          <div class="text-box">
-            <small>Plan Activo</small>
-            <p style="color: #f38430; font-weight: 700;">Plan Rastreo Pro</p>
-          </div>
-          <ion-button slot="end" fill="clear" color="warning" class="renew-btn">
-            Renovar
-          </ion-button>
-        </div>
-      </div> -->
+    <ion-list lines="none" class="menu-list">
+  
+  <ion-item button detail="true" (click)="irAMisCollares()" class="menu-item">
+    <div class="icon-container hardware" slot="start">
+      <ion-icon name="hardware-chip-outline"></ion-icon>
+    </div>
+    <ion-label>
+      <h2>Mis Dispositivos</h2>
+      <p>Batería, señal y estado del collar</p>
+    </ion-label>
+  </ion-item>
 
-      <p class="label-group">Más Opciones</p>
-      <div class="info-card">
-        <div class="info-item">
-          <div class="icon-box orange-icon">
-            <ion-icon name="card-outline"></ion-icon>
-          </div>
-          <div class="text-box">
-            <p>Métodos de Pago</p>
-          </div>
-          <ion-icon name="chevron-forward-outline" slot="end" class="arrow-icon"></ion-icon>
-        </div>
+  </ion-list>
+      
+    </div>
 
-        <div class="info-item no-border">
-          <div class="icon-box orange-icon">
-            <ion-icon name="help-circle-outline"></ion-icon>
-          </div>
-          <div class="text-box">
-            <p>Soporte Técnico</p>
-          </div>
-          <ion-icon name="chevron-forward-outline" slot="end" class="arrow-icon"></ion-icon>
-        </div>
-      </div>
-
+    <div class="profile-branding">
+      <img src="assets/splash.png" alt="Logo" />
+      <p>Tracker System</p>
+      <span>Zapopan, Jalisco</span>
     </div>
 
     <div class="footer-actions">
@@ -94,6 +80,12 @@
         Desconectar cuenta
       </ion-button>
     </div>
-
   </div>
+
+  <ng-template #loading>
+    <div class="loader-container">
+      <ion-spinner name="crescent" color="primary"></ion-spinner>
+      <p>Cargando información...</p>
+    </div>
+  </ng-template>
 </ion-content>
