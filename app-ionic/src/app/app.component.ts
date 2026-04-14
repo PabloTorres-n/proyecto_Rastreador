@@ -122,6 +122,11 @@ private ngZone = inject(NgZone);
 
   // --- GESTIÓN DE NOTIFICACIONES PUSH ---
   async inicializarNotificaciones(userId: string) {
+
+    try {
+    // Esto limpia cualquier rastro del token anterior en el plugin
+    await PushNotifications.removeAllListeners(); 
+  } catch (e) { console.log("No había listeners"); }
     let perm = await PushNotifications.requestPermissions();
 
     if (perm.receive === 'granted') {
@@ -183,6 +188,7 @@ private ngZone = inject(NgZone);
 
   // --- COMUNICACIÓN CON EL BACKEND ---
   async guardarTokenEnServidor(userId: string, token: string) {
+    console.log('📦 BODY:', { userId, token });
     const url = 'https://raestreadorfijo.vercel.app/api/clientes/push-token'; 
     
     try {
@@ -200,5 +206,16 @@ private ngZone = inject(NgZone);
 
   navegar(ruta: string) {
     this.router.navigate([`/${ruta}`]);
+  }
+
+  public setupNotificationsAfterLogin() {
+    const usuarioData = localStorage.getItem('usuario');
+    if (usuarioData) {
+      const usuarioObj = JSON.parse(usuarioData);
+      if (usuarioObj.id) {
+        console.log('🔔 Configurando notificaciones post-login...');
+        this.inicializarNotificaciones(usuarioObj.id);
+      }
+    }
   }
 }

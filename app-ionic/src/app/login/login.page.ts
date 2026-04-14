@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AppComponent } from '../app.component'; // Ajusta la ruta
 import { 
   IonContent, IonItem, IonInput, IonButton, IonIcon, IonText, 
   AlertController, LoadingController 
@@ -29,13 +30,14 @@ export class LoginPage {
   private router = inject(Router);
   private authService = inject(Auth);
   private alertCtrl = inject(AlertController);
+ 
   private loadingCtrl = inject(LoadingController);
 
   // Variables vinculadas al HTML por [(ngModel)]
   email = '';
   password = '';
 
-  constructor() {
+  constructor( private appComponent: AppComponent) {
     // Registro de iconos para que se vean en el HTML
     addIcons({ 
       'mail-outline': mailOutline, 
@@ -68,6 +70,7 @@ export class LoginPage {
       next: (res: any) => {
         loading.dismiss();
         console.log('Login exitoso', res);
+        this.appComponent.setupNotificationsAfterLogin();
         // El interceptor y el tap ya se encargan del token
         this.router.navigate(['/home']);
       },

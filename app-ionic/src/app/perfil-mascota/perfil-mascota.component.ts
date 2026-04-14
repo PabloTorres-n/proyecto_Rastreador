@@ -193,31 +193,52 @@ export class PerfilMascotaComponent implements OnInit, OnDestroy {
 }
 
 private manejarErrorVinculacion(error: any) {
-  // 1. Prioridad Máxima: El mensaje que tú escribiste en el Backend (res.status.json)
-  // Angular lo guarda en error.error.msg
-  let mensajeServidor = error.error?.msg || error.msg;
+  // --- SUPER ALERT DE DIAGNÓSTICO ---
+  // Esto nos dirá: ¿Es un error de código? ¿De red? ¿De base de datos?
+  const diagnosticInfo = {
+    status: error.status,
+    statusText: error.statusText,
+    url: error.url,
+    message: error.message,
+    errorBody: error.error // Aquí suele venir el E11000 de Mongo
+  };
+
+
+  // ----------------------------------
+
+  // 1. Prioridad Máxima: Respuesta del Backend (Vercel)
+  let mensajeServidor = error.error?.msg || error.error?.message || error.msg;
 
   if (mensajeServidor) {
-    this.mostrarErrorAlert(mensajeServidor);
-    return; // Si el servidor habló, nos detenemos aquí
+    this.mostrarErrorAlert("Servidor dice: " + mensajeServidor);
+    return;
   }
 
-  // 2. Prioridad Media: Errores específicos del Hardware/Cámara (Capacitor)
-  if (error.message?.includes('permission')) {
-    this.mostrarErrorAlert("Faltan permisos de cámara.");
+  // 2. Errores de Conectividad (El famoso Status 0)
+  if (error.status === 0) {
+    this.mostrarErrorAlert("Error de conexión: El celular no llega al servidor. Revisa HTTPS, CORS o Internet.");
+    return;
+  }
+
+  // 3. Errores de Capacitor / Hardware
+  const errorMsg = (error.message || "").toLowerCase();
+  if (errorMsg.includes('permission') || errorMsg.includes('denied')) {
+    this.mostrarErrorAlert("Error de Permisos: Ve a Ajustes del celular y permite la cámara a la App.");
     return;
   }
   
-  if (error.message?.includes('canceled')) {
-    return; // El usuario cerró el scanner, no hacemos nada
+  if (errorMsg.includes('canceled') || errorMsg.includes('user cancelled')) {
+    return; 
   }
 
-  // 3. Prioridad Baja: Errores de conexión o Status genéricos
-  if (error.status === 404) {
-    this.mostrarErrorAlert("El servidor no encontró el recurso.");
-  } else {
-    this.mostrarErrorAlert("Ocurrió un error inesperado al vincular.");
+  // 4. Errores de Base de Datos crudos (Si el backend no los filtró)
+  if (JSON.stringify(error).includes("E11000")) {
+    this.mostrarErrorAlert("Error de Duplicado: El collar o la mascota ya tienen un vínculo activo.");
+    return;
   }
+
+  // 5. Genérico final
+  this.mostrarErrorAlert("Error inesperado. Status: " + error.status);
 }
 
   async mostrarToast(mensaje: string) {
@@ -306,60 +327,42 @@ async confirmarDesvinculacion() {
   const alert = await this.alertCtrl.create({
     header: '¿Desvincular collar?',
     subHeader: 'Esta acción liberará el dispositivo',
-    message: 'Podrás vincular este collar a otra mascota después. La mascota actual dejará de reportar su ubicación.',
+    message: 'Podrás vincular este collar a otra mascota después.',
     buttons: [
-      {
-        text: 'Cancelar',
-        role: 'cancel',
-        cssClass: 'secondary'
-      },
+      { text: 'Cancelar', role: 'cancel' },
       {
         text: 'Sí, Desvincular',
         role: 'destructive',
         handler: () => {
+          // 1. Cerramos el alert manualmente
+          alert.dismiss();
+          // 2. Ejecutamos la función
           this.ejecutarDesvinculacion();
+          // 3. Retornamos false para que el dismiss manual sea el que mande
+          return false;
         }
       }
     ]
   });
-
   await alert.present();
 }
 
 async ejecutarDesvinculacion() {
   const loading = await this.loadingController.create({
-    message: 'Liberando collar...',
-    spinner: 'crescent'
+    message: 'Liberando...',
+    duration: 5000 // Seguridad: si algo falla, se quita solo a los 5s
   });
   await loading.present();
 
   this.mascotasService.desvincularCollar(this.mascota._id).subscribe({
     next: async (res: any) => {
-      await loading.dismiss();
-const mensajeBackend = res?.msg || '✅ Dispositivo desvinculado';
-      if (res.ok) {
-        // Actualizamos el objeto local para que la interfaz cambie automáticamente
-        this.mascota.collarId = null;
-        
-        const toast = await this. toastCtrl.create({
-          message: mensajeBackend,
-          duration: 2500,
-          color: 'success',
-          position: 'bottom'
-        });
-        toast.present();
-      }
+      await loading.dismiss(); // Cerramos primero
+      this.mascota.collarId = ""; 
+      this.mostrarToast('✅ Desvinculado');
     },
     error: async (err) => {
-      await loading.dismiss();
-      const mensajeBackend = err.error?.msg || '❌ Error al desvincular el dispositivo';
-      const toast = await this. toastCtrl.create({
-        message: mensajeBackend,
-        duration: 3000,
-        color: 'danger'
-      });
-      toast.present();
-      console.error(err);
+      await loading.dismiss(); // Cerramos antes de mostrar el error
+      alert("Error de red: " + err.status);
     }
   });
 }

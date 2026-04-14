@@ -1,32 +1,34 @@
 const Cliente= require('../models/Cliente');
 const Collar = require('../models/Collar');
-
+const mongoose = require('mongoose');
 // En tu controlador de Clientes (Backend)
 exports.actualizarToken = async (req, res) => {
+    console.log(req.body);
     try {
-        // Aceptamos tanto userId como id para evitar fallos
-        const idParaActualizar = req.body.userId || req.body.id;
-        const tokenRecibido = req.body.token;
+        const { userId, token } = req.body;
+        
+        // Convertimos el string a ObjectId de forma segura
+        const objectId = new mongoose.Types.ObjectId(userId);
 
-        console.log("Intentando actualizar ID:", idParaActualizar);
-
-        const cliente = await Cliente.findByIdAndUpdate(
-            idParaActualizar, 
-            { pushToken: tokenRecibido },
+        const usuarioActualizado = await Cliente.findByIdAndUpdate(
+            objectId, 
+            { $set: { pushToken: token } }, // Usamos $set para asegurar la escritura
             { new: true }
         );
 
-        if (!cliente) {
-            return res.status(404).json({ ok: false, msg: "No se encontró el cliente con ese ID" });
+        if (!usuarioActualizado) {
+            console.log("❌ No se encontró el usuario con ID:", userId);
+            return res.status(404).json({ ok: false, msg: "Usuario no existe en BD" });
         }
 
-        res.json({ ok: true, msg: "Token actualizado en MongoDB", token: cliente.pushToken });
+        console.log("✅ Token actualizado en BD para:", usuarioActualizado.email);
+        res.json({ ok: true, usuario: usuarioActualizado });
+
     } catch (error) {
-        console.error("Error en actualizarToken:", error);
-        res.status(500).json({ ok: false, error: error.message });
+        console.error("🔥 Error en actualizarToken:", error);
+        res.status(500).json({ ok: false, error });
     }
 };
-
 // Ejemplo rápido en Node.js
 exports.obtenerPerfil = async (req, res) => {
     try {

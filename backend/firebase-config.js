@@ -1,10 +1,22 @@
 const admin = require("firebase-admin");
-const serviceAccount = require("./firebase-account.json"); // Asegúrate que la ruta sea correcta
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
+const privateKey = process.env.FIREBASE_PRIVATE_KEY 
+  ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n') 
+  : null;
 
-console.log("🔥 Firebase Admin inicializado correctamente");
+if (!admin.apps.length) {
+  try {
+    admin.initializeApp({
+      credential: admin.credential.cert({
+        projectId: process.env.FIREBASE_PROJECT_ID,
+        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+        privateKey: privateKey
+      })
+    });
+    console.log("✅ Firebase Admin conectado");
+  } catch (error) {
+    console.error("❌ Error inicializando Firebase:", error.message);
+  }
+}
 
 module.exports = admin;

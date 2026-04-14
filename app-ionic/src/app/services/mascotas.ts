@@ -55,33 +55,49 @@ export class MascotasService {
   /**
    * Proceso completo: Pide permisos, abre cámara y procesa el resultado
    */
-  async escanearYVincular(petId: string) {
-    try {
-      const granted = await this.solicitarPermisos();
-      if (!granted) throw new Error("Permiso de cámara denegado por el usuario");
+ async escanearYVincular(petId: string) {
+  try {
+    const granted = await this.solicitarPermisos();
+    if (!granted) throw new Error("Permiso de cámara denegado por el usuario");
 
-      // 1. Iniciar el scanner
-      const result = await BarcodeScanner.scan();
-
-      // 2. Validar que tengamos datos reales
-      if (result && result.barcodes && result.barcodes.length > 0) {
-        const macEscaneada = result.barcodes[0].displayValue;
-        
-        if (!macEscaneada) throw new Error("El código QR no contiene información");
-
-        console.log("QR Detectado:", macEscaneada);
-
-        // 3. Llamar a la vinculación y esperar respuesta del servidor
-        return await this.vincularMAC(petId, macEscaneada);
-      } else {
-        console.log("Escaneo cancelado");
-        return null; 
-      }
-    } catch (error) {
-      console.error("Error en escanearYVincular:", error);
-      throw error; // Re-lanzamos para que el componente lo capture en el catch
+    // --- NUEVO: Verificación del módulo de Google ---
+    const { available } = await BarcodeScanner.isGoogleBarcodeScannerModuleAvailable();
+    
+    if (!available) {
+      // Forzamos la descarga si no está presente
+      await BarcodeScanner.installGoogleBarcodeScannerModule();
+      
+      // Lanzamos un error amigable o un aviso para que el usuario sepa 
+      // que debe esperar unos segundos antes de reintentar.
+      alert("El motor de escaneo de Google se está instalando. Por favor, espera 30 segundos y vuelve a intentarlo.");
+      return null; 
     }
+    // ------------------------------------------------
+
+    // 1. Iniciar el scanner (Ahora sí, con el módulo garantizado)
+    const result = await BarcodeScanner.scan();
+
+    // 2. Validar que tengamos datos reales
+    if (result && result.barcodes && result.barcodes.length > 0) {
+      const macEscaneada = result.barcodes[0].displayValue;
+      
+      if (!macEscaneada) throw new Error("El código QR no contiene información");
+
+      console.log("QR Detectado:", macEscaneada);
+
+      // 3. Llamar a la vinculación y esperar respuesta del servidor
+      return await this.vincularMAC(petId, macEscaneada);
+    } else {
+      console.log("Escaneo cancelado");
+      return null; 
+    }
+  } catch (error) {
+    console.error("Error en escanearYVincular:", error);
+    // Tu función de diagnóstico personalizada aquí para ver detalles en el celular
+    
+    throw error; 
   }
+}
 
   /**
    * Petición HTTP PUT para vincular el collar en la BD

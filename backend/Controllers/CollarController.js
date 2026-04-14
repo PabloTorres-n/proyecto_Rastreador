@@ -116,7 +116,7 @@ exports.actualizarPosicionGps = async (req, res) => {
             updateMascota.ultimaActualizacion = ahora; 
         }
 
-        await Collar.findOneAndUpdate({ collarId: mac }, { bateria, ultimaConexion: ahora, estado: 'activo' });
+        await Collar.findOneAndUpdate({ collarId: mac }, {  ultimaConexion: ahora, estado: 'activo' });
 
         const mascota = await Mascota.findOneAndUpdate(
             { collarId: mac }, 
@@ -168,6 +168,8 @@ if (alerta_geocerca === true && mascota.geoActive === true) {
     token: mascota.usuario.pushToken
 };
             try {
+                console.log("ID del Proyecto en Admin:", admin.app().options.credential.projectId);
+console.log("Enviando al token:", mascota.usuario.pushToken.substring(0, 10) + "...");
                 await admin.messaging().send(payloadGeocerca);
                 
                 // IMPORTANTE: Guardamos la hora de ESTA alerta específica
@@ -250,21 +252,22 @@ exports.desvincularDispositivo = async (req, res) => {
         const macDelCollar = mascota.collarId;
 
         // 2. LIMPIEZA EN EL COLLAR
-        // Buscamos el collar por su MAC y ponemos 'mascotaActual' en null
+        // Usamos $unset para eliminar el campo 'mascotaActual' por completo
         await Collar.findOneAndUpdate(
-            { collarId: macDelCollar }, // Filtramos por la MAC
-            { $set: { mascotaActual: null, estado: "disponible" } } // Lo liberamos
+            { collarId: macDelCollar }, 
+            { 
+                $unset: { mascotaActual: "" }, // Elimina el campo para que no choque el índice unique
+                $set: { estado: "disponible" } 
+            }
         );
 
         // 3. LIMPIEZA EN LA MASCOTA
-        // Quitamos la referencia del collar y reseteamos GPS
+        // Usamos $unset para eliminar 'collarId' y evitar el error E11000 de duplicados null
         const mascotaActualizada = await Mascota.findByIdAndUpdate(
             idMascota,
             { 
-                $set: { 
-                    collarId: null,  
-                    ladrido: false 
-                } 
+                $unset: { collarId: "" }, // Elimina la referencia por completo
+                $set: { ladrido: false } 
             },
             { new: true }
         );
@@ -273,13 +276,13 @@ exports.desvincularDispositivo = async (req, res) => {
 
         res.json({
             ok: true,
-            msg: "Collar desvínculado correctamente",
+            msg: "Collar desvinculado correctamente",
             mascota: mascotaActualizada
         });
 
     } catch (error) {
         console.error("❌ Error al desvincular:", error);
-        res.status(500).json({ ok: false, error: error.message });
+        res.status(500).json({ ok: false, msg: "Error inesperado al desvincular", error: error.message });
     }
 };
 
